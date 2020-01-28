@@ -357,6 +357,12 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
   logger.setLevel(0);
 
+  cout << "check fitted values " << endl;
+  for(size_t k=0; k < 100; k ++ ){
+    // cout << ntrt << " " << k << " " << allfit[k] << " " << allfit_mod[k] + allfit_con[k] << " " << allfit_mod[k] << " " << allfit_con[k] << endl; 
+      cout << di_con.y[k] << " " << di_mod.y[k] << endl;
+  }
+
   for(size_t iIter=0;iIter<(nd*thin+burn);iIter++) {
     // verbose_itr = iIter>=burn;
     verbose_itr = false;
@@ -407,7 +413,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
           xi_con, // xinfo& xi
           di_con, // dinfo& di
           ftemp); // std::vector<double>& fv
-
+if(iIter == 0 && iIter == 0){
+  for(size_t ll = 0; ll < 10; ll ++ ){
+    cout << "ftemp t_con " << ll << " " << ftemp[ll] << endl;
+  }
+}
 
       logger.log("Attempting to Print Tree Post first call to fit \n");
       if(verbose_itr){
@@ -516,7 +526,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
           xi_con,
           di_con,
           ftemp);
-
+// if(iIter == 0 && iIter == 0){
+//   for(size_t ll = 0; ll < 10; ll ++ ){
+//     cout << "ftemp t_con 2 " << ll << " " << ftemp[ll] << endl;
+//   }
+// }
       for(size_t k=0;k<n;k++) {
         allfit[k] += mscale*ftemp[k];
         allfit_con[k] += mscale*ftemp[k];
@@ -563,7 +577,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
           xi_mod,
           di_mod,
           ftemp);
-
+// if(iIter == 0 && iIter == 0){
+//   for(size_t ll = 0; ll < 10; ll ++ ){
+//     cout << "ftemp t_mod " << ll << " " << ftemp[ll] << endl;
+//   }
+// }
       logger.log("Attempting to Print Tree Post first call to fit");
       if(verbose_itr){
         t_mod[iTreeMod].pr(xi_mod);

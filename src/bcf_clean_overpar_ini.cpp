@@ -189,7 +189,7 @@ cout << "before loading trees " << endl;
     ttss_con >> t_con[j];
   }
 
-cout << "load con trees " << endl;
+// cout << "load con trees " << endl;
 
   std::string itv_mod(itrees_mod[0]);
   std::stringstream ttss_mod(itv_mod);
@@ -201,21 +201,21 @@ cout << "load con trees " << endl;
     ttss_mod >> t_mod[j];
   }
 
-cout << "load all trees " << endl;
+// cout << "load all trees " << endl;
 
 
 
-cout << "print con trees " << endl;
-for(size_t tt = 0; tt < mm_con; tt ++ ){
-  cout << "index " << tt << endl;
-  cout << t_con[tt] << endl;
-}
+// cout << "print con trees " << endl;
+// for(size_t tt = 0; tt < mm_con; tt ++ ){
+//   cout << "index " << tt << endl;
+//   cout << t_con[tt] << endl;
+// }
 
-cout << "print mod trees " << endl;
-for(size_t tt = 0; tt < mm_mod; tt ++ ){
-  cout << "index " << tt << endl;
-  cout << t_mod[tt] << endl;
-}
+// cout << "print mod trees " << endl;
+// for(size_t tt = 0; tt < mm_mod; tt ++ ){
+//   cout << "index " << tt << endl;
+//   cout << t_mod[tt] << endl;
+// }
   /*****************************************************************************
   /* Setup the model
   *****************************************************************************/
@@ -290,7 +290,11 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
 
   // allocate storage
   double* ftemp  = new double[n]; //fit of current tree
-  double* precs = new double[n]; // temp storage for conditional ''precisions'' in heteroskedastic updates
+
+  // never used???
+  // double* precs = new double[n]; // temp storage for conditional ''precisions'' in heteroskedastic updates
+
+
   double* allfit_con = new double[n]; //sum of fit of all trees
   double* allfit_mod = new double[n]; //sum of fit of all trees
   double* allfit = new double[n]; //yhat
@@ -330,7 +334,7 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
     for(size_t k=ntrt;k<n;k++) {
       allfit[k] += bscale0*ftemp[k];
       allfit_mod[k] += bscale0*ftemp[k];
-      r_mod[k] = (y[k]-allfit[k])/bscale1;
+      r_mod[k] = (y[k]-allfit[k])/bscale0;
     }
   }
 
@@ -449,6 +453,12 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
 
   logger.setLevel(0);
 
+  // cout << "check fitted values " << endl;
+  // for(size_t k=0; k < 100; k ++ ){
+  //   // cout << ntrt << " " << k << " " << allfit[k] << " " << allfit_mod[k] + allfit_con[k] << " " << allfit_mod[k] << " " << allfit_con[k] << endl; 
+  //   cout << di_con.y[k] << " " << di_mod.y[k] << endl;
+  // }
+
   for(size_t iIter=0;iIter<(nd*thin+burn);iIter++) {
     // verbose_itr = iIter>=burn;
     verbose_itr = false;
@@ -499,7 +509,11 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
           xi_con, // xinfo& xi
           di_con, // dinfo& di
           ftemp); // std::vector<double>& fv
-
+if(iIter == 0 && iIter == 0){
+  for(size_t ll = 0; ll < 10; ll ++ ){
+    cout << "ftemp t_con " << ll << " " << ftemp[ll] << endl;
+  }
+}
 
       logger.log("Attempting to Print Tree Post first call to fit \n");
       if(verbose_itr){
@@ -608,7 +622,11 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
           xi_con,
           di_con,
           ftemp);
-
+// if(iIter == 0 && iIter == 0){
+//   for(size_t ll = 0; ll < 10; ll ++ ){
+//     cout << "ftemp t_con 2 " << ll << " " << ftemp[ll] << endl;
+//   }
+// }
       for(size_t k=0;k<n;k++) {
         allfit[k] += mscale*ftemp[k];
         allfit_con[k] += mscale*ftemp[k];
@@ -655,7 +673,11 @@ for(size_t tt = 0; tt < mm_mod; tt ++ ){
           xi_mod,
           di_mod,
           ftemp);
-
+// if(iIter == 0 && iIter == 0){
+//   for(size_t ll = 0; ll < 10; ll ++ ){
+//     cout << "ftemp t_mod " << ll << " " << ftemp[ll] << endl;
+//   }
+// }
       logger.log("Attempting to Print Tree Post first call to fit");
       if(verbose_itr){
         t_mod[iTreeMod].pr(xi_mod);
