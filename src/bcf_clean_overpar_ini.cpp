@@ -232,11 +232,14 @@ cout << "before loading trees " << endl;
   //prior parameters
   // PX scale parameter for b: b(x) = bscale*b_0(x), bscale ~ N(0,1/bscale_prec)
   double bscale_prec = 2;
-  double bscale0 = -0.5;
-  double bscale1 = 0.5;
+  // double bscale0 = -0.5;
+  // double bscale1 = 0.5;
+  double bscale0 = bscale0_ini;
+  double bscale1 = bscale1_ini;
 
   double mscale_prec = 1.0;
-  double mscale = 1.0;
+  // double mscale = 1.0;
+  double mscale = muscale_ini;
   double delta_con = 1.0;
   double delta_mod = 1.0;
 
@@ -259,7 +262,8 @@ cout << "before loading trees " << endl;
 
   pi_con.sigma = shat/fabs(mscale); //resid variance in backfitting is \sigma^2_y/mscale^2
 
-  double sigma = shat;
+  // double sigma = shat;
+  double sigma = sigma_ini;
 
 //   // @Peter This is where dinfo is initialized
 
