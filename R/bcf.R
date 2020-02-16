@@ -10,7 +10,7 @@
   return( all( out ) )
 }
 
-.cp_quantile = function(x, num=10000, cat_levels=8){
+.cp_quantile = function(x, num=1000, cat_levels=8){
   nobs = length(x)
   nuniq = length(unique(x))
 
@@ -261,6 +261,12 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
   perm = order(z, decreasing=TRUE)
 
   cat("Calling bcfoverparRcppClean From R\n")
+  # cat("Dimension of xcon ", dim(x_c), "\n")
+  # cat("Dimension of xmod ", dim(x_m), "\n")
+  # cat("x_c \n")
+  # print(x_c)
+  # cat("cutpoint_list_c \n")
+  # print(cutpoint_list_c)
   fitbcf = bcfoverparRcppClean(yscale[perm], z[perm], w[perm],
                         t(x_c[perm,]), t(x_m[perm,,drop=FALSE]), t(x_m[1,,drop=FALSE]),
                         cutpoint_list_c, cutpoint_list_m,
@@ -300,7 +306,14 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
        tau = tau_post,
        mu_scale = fitbcf$msd*sdy,
        tau_scale = fitbcf$bsd*sdy,
-       perm = perm
+       perm = perm,
+       tree_mod = fitbcf$tree_mod,
+       tree_con = fitbcf$tree_con,
+       pi_con_tau = fitbcf$pi_con_tau,
+       pi_con_sigma = fitbcf$pi_con_sigma,
+       mscale = fitbcf$mscale,
+       bscale0 = fitbcf$bscale0,
+       bscale1 = fitbcf$bscale1
   )
 
 }

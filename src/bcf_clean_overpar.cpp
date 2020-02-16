@@ -212,8 +212,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
   pi_con.alpha = con_alpha;
   pi_con.beta  = con_beta;
+
+  // need to update pi_con.tau for warm start
   pi_con.tau   = con_sd/(sqrt(delta_con)*sqrt((double) ntree_con)); //sigma_mu, variance on leaf parameters
 
+  // need to update pi_con.sigma for warm start
   pi_con.sigma = shat/fabs(mscale); //resid variance in backfitting is \sigma^2_y/mscale^2
 
   double sigma = shat;
@@ -357,11 +360,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
   logger.setLevel(0);
 
-  cout << "check fitted values " << endl;
-  for(size_t k=0; k < 100; k ++ ){
-    // cout << ntrt << " " << k << " " << allfit[k] << " " << allfit_mod[k] + allfit_con[k] << " " << allfit_mod[k] << " " << allfit_con[k] << endl; 
-      cout << di_con.y[k] << " " << di_mod.y[k] << endl;
-  }
+  // cout << "check fitted values " << endl;
+  // for(size_t k=0; k < 100; k ++ ){
+  //   // cout << ntrt << " " << k << " " << allfit[k] << " " << allfit_mod[k] + allfit_con[k] << " " << allfit_mod[k] << " " << allfit_con[k] << endl; 
+  //     cout << di_con.y[k] << " " << di_mod.y[k] << endl;
+  // }
 
   for(size_t iIter=0;iIter<(nd*thin+burn);iIter++) {
     // verbose_itr = iIter>=burn;
@@ -413,11 +416,11 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
           xi_con, // xinfo& xi
           di_con, // dinfo& di
           ftemp); // std::vector<double>& fv
-if(iIter == 0 && iIter == 0){
-  for(size_t ll = 0; ll < 10; ll ++ ){
-    cout << "ftemp t_con " << ll << " " << ftemp[ll] << endl;
-  }
-}
+// if(iIter == 0 && iIter == 0){
+//   for(size_t ll = 0; ll < 10; ll ++ ){
+//     cout << "ftemp t_con " << ll << " " << ftemp[ll] << endl;
+//   }
+// }
 
       logger.log("Attempting to Print Tree Post first call to fit \n");
       if(verbose_itr){
@@ -959,6 +962,39 @@ if(iIter == 0 && iIter == 0){
 
   Rcout << "time for loop: " << time2 - time1 << endl;
 
+  // print out tree structure, for usage of BART package
+
+  std::stringstream treess_mod;
+  std::stringstream treess_con;
+
+  Rcpp::StringVector output_tree_mod(1);
+  Rcpp::StringVector output_tree_con(1);
+
+  // for(size_t i = 0; i < num_sweeps; i ++ ){
+  treess_mod.precision(10);
+  treess_con.precision(10);
+
+  treess_mod.str(std::string());
+  treess_mod << ntree_mod << " " << p_mod << endl;
+
+  treess_con.str(std::string());
+  treess_con << ntree_con << " " << p_con << endl;
+
+  for (size_t t = 0; t < ntree_mod; t++)
+  {
+    // cout << "printing tree " << t << endl;
+    // cout << t_mod[t] << endl;
+      treess_mod << t_mod[t];
+  }
+
+  for (size_t t = 0; t < ntree_con; t++)
+  {
+      treess_con << t_con[t];
+  }
+
+  output_tree_mod(0) = treess_mod.str();
+  output_tree_con(0) = treess_con.str();
+
   t_mod.clear(); t_con.clear();
   delete[] allfit;
   delete[] allfit_mod;
@@ -971,6 +1007,9 @@ if(iIter == 0 && iIter == 0){
 
   return(List::create(_["yhat_post"] = yhat_post, _["b_post"] = b_post, _["b_est_post"] = b_est_post,
                       _["sigma"] = sigma_post, _["msd"] = msd_post, _["bsd"] = bsd_post,
-                      _["gamma"] = gamma_post, _["random_var_post"] = random_var_post
+                      _["gamma"] = gamma_post, _["random_var_post"] = random_var_post,
+                      _["tree_mod"] = output_tree_mod, _["tree_con"] = output_tree_con,
+                      _["pi_con_tau"] = pi_con.tau, _["pi_con_sigma"] = pi_con.sigma,
+                      _["mscale"] = mscale, _["bscale0"] = bscale0, _["bscale1"] = bscale1
   ));
 }
