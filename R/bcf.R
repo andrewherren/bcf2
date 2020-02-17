@@ -313,7 +313,10 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
        pi_con_sigma = fitbcf$pi_con_sigma,
        mscale = fitbcf$mscale,
        bscale0 = fitbcf$bscale0,
-       bscale1 = fitbcf$bscale1
+       bscale1 = fitbcf$bscale1,
+       mscale_vec = fitbcf$mscale_vec,
+       bscale0_vec = fitbcf$bscale0_vec,
+       bscale1_vec = fitbcf$bscale1_vec
   )
 
 }
