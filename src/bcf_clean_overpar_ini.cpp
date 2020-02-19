@@ -26,7 +26,7 @@ using namespace Rcpp;
 //data should come in sorted with all trt first, then control cases
 
 // [[Rcpp::export]]
-List bcfoverparRcppClean_ini(SEXP treedraws_con, SEXP treedraws_mod, double muscale_ini, double bscale0_ini, double bscale1_ini, double sigma_ini, double pi_con_tau, double pi_con_sigma,
+List bcfoverparRcppClean_ini(SEXP treedraws_con, SEXP treedraws_mod, double muscale_ini, double bscale0_ini, double bscale1_ini, double sigma_ini, double pi_con_tau, double pi_con_sigma, double pi_mod_tau, double pi_mod_sigma,
                              NumericVector y_, NumericVector z_, NumericVector w_,
                              NumericVector x_con_, NumericVector x_mod_, NumericVector x_mod_est_,
                              List x_con_info_list, List x_mod_info_list,
@@ -322,11 +322,16 @@ List bcfoverparRcppClean_ini(SEXP treedraws_con, SEXP treedraws_mod, double musc
 
     pi_mod.alpha = mod_alpha;                                          //prior prob a bot node splits is alpha/(1+d)^beta, d is depth of node
     pi_mod.beta = mod_beta;                                            //2 for bart means it is harder to build big trees.
-    pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //sigma_mu, variance on leaf parameters
+    // pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //sigma_mu, variance on leaf parameters
+
+cout << "pi mod tau " << con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)) << " " << pi_mod_tau << endl;
+    pi_mod.tau = pi_mod_tau;
 
     shat = sigma_ini;
 
-    pi_mod.sigma = shat; //resid variance is \sigma^2_y/bscale^2 in the backfitting update
+    // pi_mod.sigma = shat; //resid variance is \sigma^2_y/bscale^2 in the backfitting update
+cout << "pi mod sigma " << shat << " " << pi_mod_sigma << endl;
+    pi_mod.sigma = pi_mod_sigma;
 
     pinfo pi_con;
     pi_con.pbd = 1.0; //prob of birth/death move

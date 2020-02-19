@@ -1085,6 +1085,7 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
                          _["gamma"] = gamma_post, _["random_var_post"] = random_var_post,
                          _["tree_mod"] = output_tree_mod, _["tree_con"] = output_tree_con,
                          _["pi_con_tau"] = pi_con.tau, _["pi_con_sigma"] = pi_con.sigma,
+                         _["pi_mod_tau"] = pi_mod.tau, _["pi_mod_sigma"] = pi_mod.sigma,
                          _["mscale"] = mscale, _["bscale0"] = bscale0, _["bscale1"] = bscale1,
                          _["mscale_vec"] = m_vec, _["bscale0_vec"] = b0_vec, _["bscale1_vec"] = b1_vec));
 }
