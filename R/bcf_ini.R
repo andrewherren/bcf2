@@ -182,9 +182,10 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                 base_moderate = 0.25,
                 power_moderate = 3,
                 nu = 3, lambda = NULL, sigq = .9, sighat = NULL,
-                include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE
+                include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE, ini_bcf = FALSE
 ) {
-  
+  print("ini bcf" )
+  print(ini_bcf)
   if(is.null(w)){
     w <- matrix(1, ncol = 1, nrow = length(y))
     }
@@ -263,7 +264,7 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
   perm = order(z, decreasing=TRUE)
 
   cat("Calling bcfoverparRcppClean From R\n")
-  fitbcf = bcfoverparRcppClean_ini(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
+  fitbcf = bcfoverparRcppClean_ini(ini_bcf, treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
                         pi_mod_tau, pi_mod_sigma,
                         yscale[perm], z[perm], w[perm],
                         t(x_c[perm,]), t(x_m[perm,,drop=FALSE]), t(x_m[1,,drop=FALSE]),
@@ -278,7 +279,7 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                         mod_sd = ifelse(abs(sdy - sd_moderate)<1e-6, 1, sd_moderate/sdy)/ifelse(use_tauscale,0.674,1), # if HN make sd_moderate the prior median
                         base_moderate, power_moderate, base_control, power_control,
                         "tmp", status_interval = update_interval,
-                        use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE)
+                        use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE, trt_init = 1.0)
   cat(" bcfoverparRcppClean returned to R\n")
 
 

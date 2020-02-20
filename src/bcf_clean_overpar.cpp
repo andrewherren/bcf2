@@ -1044,6 +1044,16 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
     Rcpp::StringVector output_tree_mod(1);
     Rcpp::StringVector output_tree_con(1);
 
+    cout << "print a single con tree " << endl;
+    cout << t_con[0].getv() << " " << t_con[0].getc() << " " << xi_con[t_con[0].getv()][t_con[0].getc()] << endl;
+    cout << t_con[1].getv() << " " << t_con[1].getc() << " " << xi_con[t_con[1].getv()][t_con[1].getc()] << endl;
+    cout << t_con[2].getv() << " " << t_con[2].getc() << " " << xi_con[t_con[2].getv()][t_con[2].getc()] << endl;
+
+    cout << "print a single mod tree " << endl;
+    cout << t_mod[0].getv() << " " << t_mod[0].getc() << " " << xi_mod[t_mod[0].getv()][t_mod[0].getc()] << endl;
+    cout << t_mod[1].getv() << " " << t_mod[1].getc() << " " << xi_mod[t_mod[1].getv()][t_mod[1].getc()] << endl;
+    cout << t_mod[2].getv() << " " << t_mod[2].getc() << " " << xi_mod[t_mod[2].getv()][t_mod[2].getc()] << endl;
+
     // for(size_t i = 0; i < num_sweeps; i ++ ){
     treess_mod.precision(10);
     treess_con.precision(10);
