@@ -42,19 +42,22 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                              double mod_alpha, double mod_beta,
                              CharacterVector treef_name_,
                              int status_interval = 100,
-                             bool RJ = false, bool use_mscale = true, bool use_bscale = true, bool b_half_normal = true,
+                             bool RJ = false, bool randeff = false, bool use_mscale = true, bool use_bscale = true, bool b_half_normal = true,
                              double trt_init = 1.0)
 {
 
-    bool randeff = true;
-    if (random_var_ix.n_elem == 1)
-    {
-        randeff = false;
-    }
+    // bool randeff = true;
+    // if (random_var_ix.n_elem == 1)
+    // {
+    //     randeff = false;
+    // }
 
-    if (randeff)
+    if (randeff){
         Rcout << "Using random effects." << std::endl;
-
+    }else{
+        Rcout << "NOT using random effects." << std::endl;
+    }
+    
     std::string treef_name = as<std::string>(treef_name_);
     std::ofstream treef(treef_name.c_str());
 
@@ -382,6 +385,9 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     pi_con.tau = pi_con_tau;
     pi_con.sigma = pi_con_sigma;
+
+    cout << "pi con tau " << con_sd/(sqrt(delta_con)*sqrt((double) ntree_con)) << " " << pi_con_tau << endl;
+    cout << "pi con sigma " << shat/fabs(mscale) << " " << pi_con_sigma << endl;
 
     // double sigma = shat;
     double sigma = sigma_ini;
