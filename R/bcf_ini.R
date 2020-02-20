@@ -305,7 +305,10 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
        tau = tau_post,
        mu_scale = fitbcf$msd*sdy,
        tau_scale = fitbcf$bsd*sdy,
-       perm = perm
+       perm = perm,
+       mscale_vec = fitbcf$mscale_vec,
+       bscale0_vec = fitbcf$bscale0_vec,
+       bscale1_vec = fitbcf$bscale1_vec
   )
 
 }

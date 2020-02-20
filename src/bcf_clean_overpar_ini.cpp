@@ -57,7 +57,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     }else{
         Rcout << "NOT using random effects." << std::endl;
     }
-    
+
     std::string treef_name = as<std::string>(treef_name_);
     std::ofstream treef(treef_name.c_str());
 
@@ -567,7 +567,9 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     NumericMatrix b_est_post(nd, n_mod_est);
     arma::mat gamma_post(nd, gamma.n_elem);
     arma::mat random_var_post(nd, random_var.n_elem);
-
+    NumericVector b0_vec(nd);
+    NumericVector b1_vec(nd);
+    NumericVector m_vec(nd);
     //  NumericMatrix spred2(nd,dip.n);
 
     /*
@@ -1215,6 +1217,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             msd_post(save_ctr) = fabs(mscale) * con_sd;
             bsd_post(save_ctr) = fabs(bscale1 - bscale0) * mod_sd;
 
+            m_vec(save_ctr) = mscale;
+            b0_vec(save_ctr) = bscale0;
+            b1_vec(save_ctr) = bscale1;
+
             gamma_post.row(save_ctr) = (diagmat(random_var_ix * eta) * gamma).t();
             random_var_post.row(save_ctr) = (sqrt(eta % eta % random_var)).t();
 
@@ -1257,5 +1263,6 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     return (List::create(_["yhat_post"] = yhat_post, _["b_post"] = b_post, _["b_est_post"] = b_est_post,
                          _["sigma"] = sigma_post, _["msd"] = msd_post, _["bsd"] = bsd_post,
-                         _["gamma"] = gamma_post, _["random_var_post"] = random_var_post));
+                         _["gamma"] = gamma_post, _["random_var_post"] = random_var_post,
+                         _["mscale_vec"] = m_vec, _["bscale0_vec"] = b0_vec, _["bscale1_vec"] = b1_vec));
 }
