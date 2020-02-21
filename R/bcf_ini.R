@@ -10,7 +10,7 @@
   return( all( out ) )
 }
 
-.cp_quantile = function(x, num=1000, cat_levels=8){
+.cp_quantile = function(x, num=50000, cat_levels=8){
   nobs = length(x)
   nuniq = length(unique(x))
 
@@ -170,7 +170,7 @@
 #' @importFrom stats approxfun lm qchisq quantile sd
 #' @export
 bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
-                pi_mod_tau, pi_mod_sigma,
+                pi_mod_tau, pi_mod_sigma, mod_tree_scaling, 
                 y, z, x_control, x_moderate=x_control, pihat, w = NULL,
                 nburn, nsim, nthin = 1, update_interval = 100,
                 ntree_control = 200,
@@ -265,7 +265,7 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
 
   cat("Calling bcfoverparRcppClean From R\n")
   fitbcf = bcfoverparRcppClean_ini(ini_bcf, treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
-                        pi_mod_tau, pi_mod_sigma,
+                        pi_mod_tau, pi_mod_sigma, mod_tree_scaling,
                         yscale[perm], z[perm], w[perm],
                         t(x_c[perm,]), t(x_m[perm,,drop=FALSE]), t(x_m[1,,drop=FALSE]),
                         cutpoint_list_c, cutpoint_list_m,

@@ -26,7 +26,7 @@ using namespace Rcpp;
 //data should come in sorted with all trt first, then control cases
 
 // [[Rcpp::export]]
-List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mod, double muscale_ini, double bscale0_ini, double bscale1_ini, double sigma_ini, double pi_con_tau, double pi_con_sigma, double pi_mod_tau, double pi_mod_sigma,
+List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mod, double muscale_ini, double bscale0_ini, double bscale1_ini, double sigma_ini, double pi_con_tau, double pi_con_sigma, double pi_mod_tau, double pi_mod_sigma, double mod_tree_scaling,
                              NumericVector y_, NumericVector z_, NumericVector w_,
                              NumericVector x_con_, NumericVector x_mod_, NumericVector x_mod_est_,
                              List x_con_info_list, List x_mod_info_list,
@@ -52,9 +52,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //     randeff = false;
     // }
 
-    if (randeff){
+    if (randeff)
+    {
         Rcout << "Using random effects." << std::endl;
-    }else{
+    }
+    else
+    {
         Rcout << "NOT using random effects." << std::endl;
     }
 
@@ -255,6 +258,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         cout << " print some nodes, after " << endl;
         cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
         cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
+        cout << "---------------------------------" << endl;
     }
 
     // cout << "load mod trees " << endl;
@@ -312,6 +316,20 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         cout << " print some nodes, after " << endl;
         cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
         cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
+        cout << "---------------------------------" << endl;
+    }
+
+    // scale all mod trees tau(x) * (b1 - b0) from XBCF
+    for (size_t j = 0; j < mm_mod; j++)
+    {
+        temp_node.clear();
+        t_mod[j].getnodes(temp_node);
+        for (size_t kk = 0; kk < temp_node.size(); kk++)
+        {
+            cout << "before scaling mod tree " << temp_node[kk]->getm() << endl;
+            temp_node[kk]->setm(temp_node[kk]->getm() * mod_tree_scaling);
+            cout << "after scaling mod tree " << temp_node[kk]->getm() << endl;
+        }
     }
 
     // cout << "load all trees " << endl;
@@ -386,8 +404,8 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     pi_con.tau = pi_con_tau;
     pi_con.sigma = pi_con_sigma;
 
-    cout << "pi con tau " << con_sd/(sqrt(delta_con)*sqrt((double) ntree_con)) << " " << pi_con_tau << endl;
-    cout << "pi con sigma " << shat/fabs(mscale) << " " << pi_con_sigma << endl;
+    cout << "pi con tau " << con_sd / (sqrt(delta_con) * sqrt((double)ntree_con)) << " " << pi_con_tau << endl;
+    cout << "pi con sigma " << shat / fabs(mscale) << " " << pi_con_sigma << endl;
 
     // double sigma = shat;
     double sigma = sigma_ini;
