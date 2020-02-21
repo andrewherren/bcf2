@@ -51,12 +51,15 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
     //     randeff = false;
     // }
 
-    if (randeff){
+    if (randeff)
+    {
         Rcout << "Using random effects." << std::endl;
-    }else{
+    }
+    else
+    {
         Rcout << "NOT using random effects." << std::endl;
     }
-    
+
     std::string treef_name = as<std::string>(treef_name_);
     std::ofstream treef(treef_name.c_str());
 
@@ -1081,6 +1084,68 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
     output_tree_mod(0) = treess_mod.str();
     output_tree_con(0) = treess_con.str();
+
+    double *allfit_mod_temp = new double[n]; //sum of fit of all trees
+    double *allfit_con_temp = new double[n]; //sum of fit of all trees
+    for(size_t k = 0; k < n; k++ ){
+        allfit_mod_temp[k] = 0;
+        allfit_con_temp[k] = 0;
+    }
+
+    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    {
+        for (size_t k = 0; k < n; k++)
+        {
+            ftemp[k] = 0;
+        }
+
+        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+
+        for (size_t k = 0; k < n; k++)
+        {
+            allfit_mod_temp[k] += ftemp[k];
+        }
+    }
+
+    for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
+    {
+        for (size_t k = 0; k < n; k++)
+        {
+            ftemp[k] = 0;
+        }
+        fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+
+        for (size_t k = 0; k < n; k++)
+        {
+            allfit_con_temp[k] += ftemp[k];
+        }
+    }
+
+    cout << "-------------------------" << endl;
+    cout << "all fit  |  all fit con  |  all fit mod |  all fit con temp  | all fit mod temp" << endl;
+
+    for (size_t ll = 0; ll < 50; ll++)
+    {
+        cout << ll << "  " << allfit[ll] << "  " << allfit_con[ll] << "  " << allfit_mod[ll] << "  " << allfit_con_temp[ll] << "  " << allfit_mod_temp[ll] << "  " << endl;
+    }
+    cout << "print mod trees " << endl;
+    for (size_t tt = 0; tt < ntree_mod; tt++)
+    {
+        cout << "index " << tt << endl;
+        cout << t_mod[tt] << endl;
+    }
+
+    cout << "-------------------------" << endl;
+    cout << "print fitted values of all mod trees " << endl;
+    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    {
+        cout << "Tree " << iTreeMod << endl;
+        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+        for (size_t kk = 0; kk < n; kk++)
+        {
+            cout << ftemp[kk] << endl;
+        }
+    }
 
     t_mod.clear();
     t_con.clear();

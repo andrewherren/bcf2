@@ -10,7 +10,7 @@
   return( all( out ) )
 }
 
-.cp_quantile = function(x, num=1000, cat_levels=8){
+.cp_quantile = function(x, num=50000, cat_levels=8){
   nobs = length(x)
   nuniq = length(unique(x))
 
