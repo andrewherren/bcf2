@@ -493,7 +493,6 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
                     stop("NaN in resid");
                 }
             }
-
             for (int k = 0; k < n; ++k)
             {
                 weight[k] = w[k] * mscale * mscale / (sigma * sigma); // for non-het case, weights need to be divided by sigma square to make it similar to phi
@@ -1135,17 +1134,17 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
         cout << t_mod[tt] << endl;
     }
 
-    cout << "-------------------------" << endl;
-    cout << "print fitted values of all mod trees " << endl;
-    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-    {
-        cout << "Tree " << iTreeMod << endl;
-        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
-        for (size_t kk = 0; kk < n; kk++)
-        {
-            cout << ftemp[kk] << endl;
-        }
-    }
+    // cout << "-------------------------" << endl;
+    // cout << "print fitted values of all mod trees " << endl;
+    // for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    // {
+    //     cout << "Tree " << iTreeMod << endl;
+    //     fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //     for (size_t kk = 0; kk < n; kk++)
+    //     {
+    //         cout << ftemp[kk] << endl;
+    //     }
+    // }
 
     t_mod.clear();
     t_con.clear();

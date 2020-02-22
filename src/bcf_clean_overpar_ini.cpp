@@ -213,8 +213,8 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         // search xinfo matrix in bcf package, find corresponding index of cutpoints
         temp_node.clear();
         t_con[j].getnodes(temp_node);
-        // cout << " print some nodes " << endl;
-        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        cout << " print some nodes " << endl;
+        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
 
         if (!ini_bcf)
         {
@@ -255,10 +255,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             }
         }
 
-        // cout << " print some nodes, after " << endl;
-        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
-        // cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
-        // cout << "---------------------------------" << endl;
+        cout << " print some nodes, after " << endl;
+        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
+        cout << "---------------------------------" << endl;
     }
 
     // cout << "load mod trees " << endl;
@@ -275,12 +275,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         // search xinfo matrix in bcf package, find corresponding index of cutpoints
         temp_node.clear();
         t_mod[j].getnodes(temp_node);
-        cout << " print some nodes " << endl;
-        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        // cout << " print some nodes " << endl;
+        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
 
         if (!ini_bcf)
         {
-            cout << "call initialization of XBCF " << endl;
+            // cout << "call initialization of XBCF " << endl;
 
             for (size_t kk = 0; kk < temp_node.size(); kk++)
             {
@@ -313,10 +313,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 }
             }
         }
-        cout << " print some nodes, after " << endl;
-        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
-        cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
-        cout << "---------------------------------" << endl;
+        // cout << " print some nodes, after " << endl;
+        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        // cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
+        // cout << "---------------------------------" << endl;
     }
 
     // scale all mod trees tau(x) * (b1 - b0) from XBCF
@@ -332,23 +332,23 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //     }
     // }
 
-    cout << "scalign parameter " << mod_tree_scaling << endl;
+    cout << "scaling parameter " << mod_tree_scaling << endl;
 
     // cout << "load all trees " << endl;
 
-    // cout << "print con trees " << endl;
-    // for (size_t tt = 0; tt < mm_con; tt++)
-    // {
-    //     cout << "index " << tt << endl;
-    //     cout << t_con[tt] << endl;
-    // }
-
-    cout << "print mod trees " << endl;
-    for (size_t tt = 0; tt < mm_mod; tt++)
+    cout << "print con trees " << endl;
+    for (size_t tt = 0; tt < mm_con; tt++)
     {
         cout << "index " << tt << endl;
-        cout << t_mod[tt] << endl;
+        cout << t_con[tt] << endl;
     }
+
+    // cout << "print mod trees " << endl;
+    // for (size_t tt = 0; tt < mm_mod; tt++)
+    // {
+    //     cout << "index " << tt << endl;
+    //     cout << t_mod[tt] << endl;
+    // }
 
 
 
@@ -533,7 +533,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         {
             ftemp[k] = 0;
         }
-        fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+        fit(t_con[iTreeCon], xi_mod, di_mod, ftemp);
 
         for (size_t k = 0; k < n; k++)
         {
@@ -553,17 +553,17 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
 
 
-    cout << "-------------------------" << endl;
-    cout << "print fitted values of all mod trees " << endl;
-    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-    {
-        cout << "Tree " << iTreeMod << endl;
-        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
-        for(size_t kk = 0; kk < n; kk ++ ){
-            cout << ftemp[kk] << endl;
-        }
+    // cout << "-------------------------" << endl;
+    // cout << "print fitted values of all mod trees " << endl;
+    // for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    // {
+    //     cout << "Tree " << iTreeMod << endl;
+    //     fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //     for(size_t kk = 0; kk < n; kk ++ ){
+    //         cout << ftemp[kk] << endl;
+    //     }
 
-    }
+    // }
 
     
     //--------------------------------------------------

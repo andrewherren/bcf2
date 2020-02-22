@@ -210,7 +210,7 @@ std::istream& operator>>(std::istream& is, xinfo& xi)
 tree::tree_cp tree::bn(double *x,xinfo& xi)
 {
 	if(l==0) return this; //bottom node
-	if(x[v] < xi[v][c]) {
+	if(x[v] <= xi[v][c]) {
 		return l->bn(x,xi);
 	} else {
 		return r->bn(x,xi);
