@@ -1048,17 +1048,7 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
     Rcpp::StringVector output_tree_mod(1);
     Rcpp::StringVector output_tree_con(1);
-
-    cout << "print a single con tree " << endl;
-    cout << t_con[0].getv() << " " << t_con[0].getc() << " " << xi_con[t_con[0].getv()][t_con[0].getc()] << endl;
-    cout << t_con[1].getv() << " " << t_con[1].getc() << " " << xi_con[t_con[1].getv()][t_con[1].getc()] << endl;
-    cout << t_con[2].getv() << " " << t_con[2].getc() << " " << xi_con[t_con[2].getv()][t_con[2].getc()] << endl;
-
-    cout << "print a single mod tree " << endl;
-    cout << t_mod[0].getv() << " " << t_mod[0].getc() << " " << xi_mod[t_mod[0].getv()][t_mod[0].getc()] << endl;
-    cout << t_mod[1].getv() << " " << t_mod[1].getc() << " " << xi_mod[t_mod[1].getv()][t_mod[1].getc()] << endl;
-    cout << t_mod[2].getv() << " " << t_mod[2].getc() << " " << xi_mod[t_mod[2].getv()][t_mod[2].getc()] << endl;
-
+    
     // for(size_t i = 0; i < num_sweeps; i ++ ){
     treess_mod.precision(10);
     treess_con.precision(10);
@@ -1084,55 +1074,55 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
     output_tree_mod(0) = treess_mod.str();
     output_tree_con(0) = treess_con.str();
 
-    double *allfit_mod_temp = new double[n]; //sum of fit of all trees
-    double *allfit_con_temp = new double[n]; //sum of fit of all trees
-    for(size_t k = 0; k < n; k++ ){
-        allfit_mod_temp[k] = 0;
-        allfit_con_temp[k] = 0;
-    }
+    // double *allfit_mod_temp = new double[n]; //sum of fit of all trees
+    // double *allfit_con_temp = new double[n]; //sum of fit of all trees
+    // for(size_t k = 0; k < n; k++ ){
+    //     allfit_mod_temp[k] = 0;
+    //     allfit_con_temp[k] = 0;
+    // }
 
-    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-    {
-        for (size_t k = 0; k < n; k++)
-        {
-            ftemp[k] = 0;
-        }
+    // for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    // {
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         ftemp[k] = 0;
+    //     }
 
-        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //     fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-        for (size_t k = 0; k < n; k++)
-        {
-            allfit_mod_temp[k] += ftemp[k];
-        }
-    }
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         allfit_mod_temp[k] += ftemp[k];
+    //     }
+    // }
 
-    for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
-    {
-        for (size_t k = 0; k < n; k++)
-        {
-            ftemp[k] = 0;
-        }
-        fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+    // for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
+    // {
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         ftemp[k] = 0;
+    //     }
+    //     fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-        for (size_t k = 0; k < n; k++)
-        {
-            allfit_con_temp[k] += ftemp[k];
-        }
-    }
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         allfit_con_temp[k] += ftemp[k];
+    //     }
+    // }
 
-    cout << "-------------------------" << endl;
-    cout << "all fit  |  all fit con  |  all fit mod |  all fit con temp  | all fit mod temp" << endl;
+    // cout << "-------------------------" << endl;
+    // cout << "all fit  |  all fit con  |  all fit mod |  all fit con temp  | all fit mod temp" << endl;
 
-    for (size_t ll = 0; ll < 50; ll++)
-    {
-        cout << ll << "  " << allfit[ll] << "  " << allfit_con[ll] << "  " << allfit_mod[ll] << "  " << allfit_con_temp[ll] << "  " << allfit_mod_temp[ll] << "  " << endl;
-    }
-    cout << "print mod trees " << endl;
-    for (size_t tt = 0; tt < ntree_mod; tt++)
-    {
-        cout << "index " << tt << endl;
-        cout << t_mod[tt] << endl;
-    }
+    // for (size_t ll = 0; ll < 50; ll++)
+    // {
+    //     cout << ll << "  " << allfit[ll] << "  " << allfit_con[ll] << "  " << allfit_mod[ll] << "  " << allfit_con_temp[ll] << "  " << allfit_mod_temp[ll] << "  " << endl;
+    // }
+    // cout << "print mod trees " << endl;
+    // for (size_t tt = 0; tt < ntree_mod; tt++)
+    // {
+    //     cout << "index " << tt << endl;
+    //     cout << t_mod[tt] << endl;
+    // }
 
     // cout << "-------------------------" << endl;
     // cout << "print fitted values of all mod trees " << endl;

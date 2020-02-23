@@ -213,8 +213,8 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         // search xinfo matrix in bcf package, find corresponding index of cutpoints
         temp_node.clear();
         t_con[j].getnodes(temp_node);
-        cout << " print some nodes " << endl;
-        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        // cout << " print some nodes " << endl;
+        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
 
         if (!ini_bcf)
         {
@@ -255,10 +255,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             }
         }
 
-        cout << " print some nodes, after " << endl;
-        cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
-        cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
-        cout << "---------------------------------" << endl;
+        // cout << " print some nodes, after " << endl;
+        // cout << "variable index " << temp_node[0]->getv() << " cutpoint index " << temp_node[0]->getc() << " cutpoint value " << temp_node[0]->getc_value() << endl;
+        // cout << " last cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() - 1] << " current cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc()] << " next cutpoint " << xi_con[temp_node[0]->getv()][temp_node[0]->getc() + 1] << endl;
+        // cout << "---------------------------------" << endl;
     }
 
     // cout << "load mod trees " << endl;
@@ -332,16 +332,16 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //     }
     // }
 
-    cout << "scaling parameter " << mod_tree_scaling << endl;
+    // cout << "scaling parameter " << mod_tree_scaling << endl;
 
     // cout << "load all trees " << endl;
 
-    cout << "print con trees " << endl;
-    for (size_t tt = 0; tt < mm_con; tt++)
-    {
-        cout << "index " << tt << endl;
-        cout << t_con[tt] << endl;
-    }
+    // cout << "print con trees " << endl;
+    // for (size_t tt = 0; tt < mm_con; tt++)
+    // {
+    //     cout << "index " << tt << endl;
+    //     cout << t_con[tt] << endl;
+    // }
 
     // cout << "print mod trees " << endl;
     // for (size_t tt = 0; tt < mm_mod; tt++)
@@ -385,13 +385,13 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     pi_mod.beta = mod_beta;   //2 for bart means it is harder to build big trees.
     // pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //sigma_mu, variance on leaf parameters
 
-    cout << "pi mod tau " << con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)) << " " << pi_mod_tau << endl;
+    // cout << "pi mod tau " << con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)) << " " << pi_mod_tau << endl;
     pi_mod.tau = pi_mod_tau;
 
     shat = sigma_ini;
 
     // pi_mod.sigma = shat; //resid variance is \sigma^2_y/bscale^2 in the backfitting update
-    cout << "pi mod sigma " << shat << " " << pi_mod_sigma << endl;
+    // cout << "pi mod sigma " << shat << " " << pi_mod_sigma << endl;
     pi_mod.sigma = pi_mod_sigma;
 
     pinfo pi_con;
@@ -407,8 +407,8 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     pi_con.tau = pi_con_tau;
     pi_con.sigma = pi_con_sigma;
 
-    cout << "pi con tau " << con_sd / (sqrt(delta_con) * sqrt((double)ntree_con)) << " " << pi_con_tau << endl;
-    cout << "pi con sigma " << shat / fabs(mscale) << " " << pi_con_sigma << endl;
+    // cout << "pi con tau " << con_sd / (sqrt(delta_con) * sqrt((double)ntree_con)) << " " << pi_con_tau << endl;
+    // cout << "pi con sigma " << shat / fabs(mscale) << " " << pi_con_sigma << endl;
 
     // double sigma = shat;
     double sigma = sigma_ini;
@@ -501,51 +501,51 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     di_con.y = r_con;
     di_mod.y = r_mod;
 
-    double *allfit_mod_temp = new double[n]; //sum of fit of all trees
-    double *allfit_con_temp = new double[n]; //sum of fit of all trees
+    // double *allfit_mod_temp = new double[n]; //sum of fit of all trees
+    // double *allfit_con_temp = new double[n]; //sum of fit of all trees
 
-    for (size_t k = 0; k < n; k++)
-    {
-        allfit_mod_temp[k] = 0;
-        allfit_con_temp[k] = 0;
-    }
+    // for (size_t k = 0; k < n; k++)
+    // {
+    //     allfit_mod_temp[k] = 0;
+    //     allfit_con_temp[k] = 0;
+    // }
 
-    for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-    {
-        for (size_t k = 0; k < n; k++)
-        {
-            ftemp[k] = 0;
-        }
+    // for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    // {
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         ftemp[k] = 0;
+    //     }
 
-        fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //     fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-        for (size_t k = 0; k < n; k++)
-        {
-            allfit_mod_temp[k] += ftemp[k];
-        }
-    }
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         allfit_mod_temp[k] += ftemp[k];
+    //     }
+    // }
 
-    for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
-    {
-        for (size_t k = 0; k < n; k++)
-        {
-            ftemp[k] = 0;
-        }
-        fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+    // for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
+    // {
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         ftemp[k] = 0;
+    //     }
+    //     fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-        for (size_t k = 0; k < n; k++)
-        {
-            allfit_con_temp[k] += ftemp[k];
-        }
-    }
+    //     for (size_t k = 0; k < n; k++)
+    //     {
+    //         allfit_con_temp[k] += ftemp[k];
+    //     }
+    // }
 
-    cout << "-------------------------" << endl;
-    cout << "all fit  |  all fit con  |  all fit mod |  all fit con temp  | all fit mod temp" << endl;
+    // cout << "-------------------------" << endl;
+    // cout << "all fit  |  all fit con  |  all fit mod |  all fit con temp  | all fit mod temp" << endl;
 
-    for (size_t ll = 0; ll < 50; ll++)
-    {
-        cout << ll << "  " << allfit[ll] << "  " << allfit_con[ll] << "  " << allfit_mod[ll] << "  " << allfit_con_temp[ll] << "  " << allfit_mod_temp[ll] << "  " << endl;
-    }
+    // for (size_t ll = 0; ll < 50; ll++)
+    // {
+    //     cout << ll << "  " << allfit[ll] << "  " << allfit_con[ll] << "  " << allfit_mod[ll] << "  " << allfit_con_temp[ll] << "  " << allfit_mod_temp[ll] << "  " << endl;
+    // }
 
     // cout << "-------------------------" << endl;
     // cout << "print fitted values of all mod trees " << endl;
@@ -678,86 +678,86 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     logger.setLevel(0);
 
-    if (update_mu_loading_tree)
-    {
-        cout << "update leaf parameter after loading trees " << endl;
-        // draw leaf parameters after loading trees
+    // if (update_mu_loading_tree)
+    // {
+    //     cout << "update leaf parameter after loading trees " << endl;
+    //     // draw leaf parameters after loading trees
 
-        for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
-        {
+    //     for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
+    //     {
 
-            fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+    //         fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-            for (size_t k = 0; k < n; k++)
-            {
-                allfit[k] = allfit[k] - mscale * ftemp[k];
-                allfit_con[k] = allfit_con[k] - mscale * ftemp[k];
-                r_con[k] = (y[k] - allfit[k]) / mscale;
-            }
+    //         for (size_t k = 0; k < n; k++)
+    //         {
+    //             allfit[k] = allfit[k] - mscale * ftemp[k];
+    //             allfit_con[k] = allfit_con[k] - mscale * ftemp[k];
+    //             r_con[k] = (y[k] - allfit[k]) / mscale;
+    //         }
 
-            for (int k = 0; k < n; ++k)
-            {
-                weight[k] = w[k] * mscale * mscale / (sigma * sigma);
-            }
+    //         for (int k = 0; k < n; ++k)
+    //         {
+    //             weight[k] = w[k] * mscale * mscale / (sigma * sigma);
+    //         }
 
-            drmu(t_con[iTreeCon], xi_con, di_con, pi_con, weight, gen);
+    //         drmu(t_con[iTreeCon], xi_con, di_con, pi_con, weight, gen);
 
-            fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+    //         fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-            for (size_t k = 0; k < n; k++)
-            {
-                allfit[k] += mscale * ftemp[k];
-                allfit_con[k] += mscale * ftemp[k];
-            }
-        }
+    //         for (size_t k = 0; k < n; k++)
+    //         {
+    //             allfit[k] += mscale * ftemp[k];
+    //             allfit_con[k] += mscale * ftemp[k];
+    //         }
+    //     }
 
-        //draw trees for b(x)
-        for (size_t k = 0; k < ntrt; ++k)
-        {
-            weight_het[k] = w[k] * bscale1 * bscale1 / (sigma * sigma);
-        }
-        for (size_t k = ntrt; k < n; ++k)
-        {
-            weight_het[k] = w[k] * bscale0 * bscale0 / (sigma * sigma);
-        }
+    //     //draw trees for b(x)
+    //     for (size_t k = 0; k < ntrt; ++k)
+    //     {
+    //         weight_het[k] = w[k] * bscale1 * bscale1 / (sigma * sigma);
+    //     }
+    //     for (size_t k = ntrt; k < n; ++k)
+    //     {
+    //         weight_het[k] = w[k] * bscale0 * bscale0 / (sigma * sigma);
+    //     }
 
-        for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-        {
-            fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //     for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+    //     {
+    //         fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-            for (size_t k = 0; k < n; k++)
-            {
-                double bscalex = (k < ntrt) ? bscale1 : bscale0;
-                allfit[k] = allfit[k] - bscalex * ftemp[k];
-                allfit_mod[k] = allfit_mod[k] - bscalex * ftemp[k];
-                r_mod[k] = (y[k] - allfit[k]) / bscalex;
-            }
+    //         for (size_t k = 0; k < n; k++)
+    //         {
+    //             double bscalex = (k < ntrt) ? bscale1 : bscale0;
+    //             allfit[k] = allfit[k] - bscalex * ftemp[k];
+    //             allfit_mod[k] = allfit_mod[k] - bscalex * ftemp[k];
+    //             r_mod[k] = (y[k] - allfit[k]) / bscalex;
+    //         }
 
-            drmu(t_mod[iTreeMod], xi_mod, di_mod, pi_mod, weight_het, gen);
+    //         drmu(t_mod[iTreeMod], xi_mod, di_mod, pi_mod, weight_het, gen);
 
-            fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+    //         fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-            for (size_t k = 0; k < ntrt; k++)
-            {
-                allfit[k] += bscale1 * ftemp[k];
-                allfit_mod[k] += bscale1 * ftemp[k];
-            }
-            for (size_t k = ntrt; k < n; k++)
-            {
-                allfit[k] += bscale0 * ftemp[k];
-                allfit_mod[k] += bscale0 * ftemp[k];
-            }
-        }
-    }else{
-        cout << "Keep read in leaf parameters fixed" << endl;
-    }
+    //         for (size_t k = 0; k < ntrt; k++)
+    //         {
+    //             allfit[k] += bscale1 * ftemp[k];
+    //             allfit_mod[k] += bscale1 * ftemp[k];
+    //         }
+    //         for (size_t k = ntrt; k < n; k++)
+    //         {
+    //             allfit[k] += bscale0 * ftemp[k];
+    //             allfit_mod[k] += bscale0 * ftemp[k];
+    //         }
+    //     }
+    // }else{
+    //     cout << "Keep read in leaf parameters fixed" << endl;
+    // }
 
-    cout << "print con trees, after updating leaf parameters" << endl;
-    for (size_t tt = 0; tt < mm_con; tt++)
-    {
-        cout << "index " << tt << endl;
-        cout << t_con[tt] << endl;
-    }
+    // cout << "print con trees, after updating leaf parameters" << endl;
+    // for (size_t tt = 0; tt < mm_con; tt++)
+    // {
+    //     cout << "index " << tt << endl;
+    //     cout << t_con[tt] << endl;
+    // }
 
     for (size_t iIter = 0; iIter < (nd * thin + burn); iIter++)
     {
