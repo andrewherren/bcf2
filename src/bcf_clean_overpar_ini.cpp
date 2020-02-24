@@ -678,82 +678,82 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     logger.setLevel(0);
 
-    // if (update_mu_loading_tree)
-    // {
-    //     cout << "update leaf parameter after loading trees " << endl;
-    //     // draw leaf parameters after loading trees
+    if (update_mu_loading_tree)
+    {
+        cout << "update leaf parameter after loading trees " << endl;
+        // draw leaf parameters after loading trees
 
-    //     for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
-    //     {
+        for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
+        {
 
-    //         fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+            fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-    //         for (size_t k = 0; k < n; k++)
-    //         {
-    //             allfit[k] = allfit[k] - mscale * ftemp[k];
-    //             allfit_con[k] = allfit_con[k] - mscale * ftemp[k];
-    //             r_con[k] = (y[k] - allfit[k]) / mscale;
-    //         }
+            for (size_t k = 0; k < n; k++)
+            {
+                allfit[k] = allfit[k] - mscale * ftemp[k];
+                allfit_con[k] = allfit_con[k] - mscale * ftemp[k];
+                r_con[k] = (y[k] - allfit[k]) / mscale;
+            }
 
-    //         for (int k = 0; k < n; ++k)
-    //         {
-    //             weight[k] = w[k] * mscale * mscale / (sigma * sigma);
-    //         }
+            for (int k = 0; k < n; ++k)
+            {
+                weight[k] = w[k] * mscale * mscale / (sigma * sigma);
+            }
 
-    //         drmu(t_con[iTreeCon], xi_con, di_con, pi_con, weight, gen);
+            drmu(t_con[iTreeCon], xi_con, di_con, pi_con, weight, gen);
 
-    //         fit(t_con[iTreeCon], xi_con, di_con, ftemp);
+            fit(t_con[iTreeCon], xi_con, di_con, ftemp);
 
-    //         for (size_t k = 0; k < n; k++)
-    //         {
-    //             allfit[k] += mscale * ftemp[k];
-    //             allfit_con[k] += mscale * ftemp[k];
-    //         }
-    //     }
+            for (size_t k = 0; k < n; k++)
+            {
+                allfit[k] += mscale * ftemp[k];
+                allfit_con[k] += mscale * ftemp[k];
+            }
+        }
 
-    //     //draw trees for b(x)
-    //     for (size_t k = 0; k < ntrt; ++k)
-    //     {
-    //         weight_het[k] = w[k] * bscale1 * bscale1 / (sigma * sigma);
-    //     }
-    //     for (size_t k = ntrt; k < n; ++k)
-    //     {
-    //         weight_het[k] = w[k] * bscale0 * bscale0 / (sigma * sigma);
-    //     }
+        //draw trees for b(x)
+        for (size_t k = 0; k < ntrt; ++k)
+        {
+            weight_het[k] = w[k] * bscale1 * bscale1 / (sigma * sigma);
+        }
+        for (size_t k = ntrt; k < n; ++k)
+        {
+            weight_het[k] = w[k] * bscale0 * bscale0 / (sigma * sigma);
+        }
 
-    //     for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
-    //     {
-    //         fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+        for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
+        {
+            fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-    //         for (size_t k = 0; k < n; k++)
-    //         {
-    //             double bscalex = (k < ntrt) ? bscale1 : bscale0;
-    //             allfit[k] = allfit[k] - bscalex * ftemp[k];
-    //             allfit_mod[k] = allfit_mod[k] - bscalex * ftemp[k];
-    //             r_mod[k] = (y[k] - allfit[k]) / bscalex;
-    //         }
+            for (size_t k = 0; k < n; k++)
+            {
+                double bscalex = (k < ntrt) ? bscale1 : bscale0;
+                allfit[k] = allfit[k] - bscalex * ftemp[k];
+                allfit_mod[k] = allfit_mod[k] - bscalex * ftemp[k];
+                r_mod[k] = (y[k] - allfit[k]) / bscalex;
+            }
 
-    //         drmu(t_mod[iTreeMod], xi_mod, di_mod, pi_mod, weight_het, gen);
+            drmu(t_mod[iTreeMod], xi_mod, di_mod, pi_mod, weight_het, gen);
 
-    //         fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
+            fit(t_mod[iTreeMod], xi_mod, di_mod, ftemp);
 
-    //         for (size_t k = 0; k < ntrt; k++)
-    //         {
-    //             allfit[k] += bscale1 * ftemp[k];
-    //             allfit_mod[k] += bscale1 * ftemp[k];
-    //         }
-    //         for (size_t k = ntrt; k < n; k++)
-    //         {
-    //             allfit[k] += bscale0 * ftemp[k];
-    //             allfit_mod[k] += bscale0 * ftemp[k];
-    //         }
-    //     }
-    // }else{
-    //     cout << "Keep read in leaf parameters fixed" << endl;
-    // }
+            for (size_t k = 0; k < ntrt; k++)
+            {
+                allfit[k] += bscale1 * ftemp[k];
+                allfit_mod[k] += bscale1 * ftemp[k];
+            }
+            for (size_t k = ntrt; k < n; k++)
+            {
+                allfit[k] += bscale0 * ftemp[k];
+                allfit_mod[k] += bscale0 * ftemp[k];
+            }
+        }
+    }else{
+        cout << "Keep read in leaf parameters fixed" << endl;
+    }
 
     // cout << "print con trees, after updating leaf parameters" << endl;
-    // for (size_t tt = 0; tt < mm_con; tt++)
+    // for (size_t tt = 0; tt < 3; tt++)
     // {
     //     cout << "index " << tt << endl;
     //     cout << t_con[tt] << endl;
