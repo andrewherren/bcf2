@@ -567,24 +567,24 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //--------------------------------------------------
     //dinfo and design for trt effect function out of sample
     //x for predictions
-    dinfo di_mod_est;              //data information for prediction
-    std::vector<double> x_mod_est; //stored like x
-    size_t n_mod_est;
-    //  if(x_mod_est_.size()) {
-    for (NumericVector::iterator it = x_mod_est_.begin(); it != x_mod_est_.end(); ++it)
-    {
-        x_mod_est.push_back(*it);
-    }
-    n_mod_est = x_mod_est.size() / p_mod;
-    //  Rcout << "n_mod_est " << n_mod_est << std::endl;
-    if (x_mod_est.size() != n_mod_est * p_mod)
-        stop("error, wrong number of elements in effect estimate data set\n");
-    //if(n_mod_est)
-    di_mod_est.n = n_mod_est;
-    di_mod_est.p = p_mod;
-    di_mod_est.x = &x_mod_est[0];
-    di_mod_est.y = 0; //there are no y's!
-    di_mod_est.w = w;
+    // dinfo di_mod_est;              //data information for prediction
+    // std::vector<double> x_mod_est; //stored like x
+    // size_t n_mod_est;
+    // //  if(x_mod_est_.size()) {
+    // for (NumericVector::iterator it = x_mod_est_.begin(); it != x_mod_est_.end(); ++it)
+    // {
+    //     x_mod_est.push_back(*it);
+    // }
+    // n_mod_est = x_mod_est.size() / p_mod;
+    // //  Rcout << "n_mod_est " << n_mod_est << std::endl;
+    // if (x_mod_est.size() != n_mod_est * p_mod)
+    //     stop("error, wrong number of elements in effect estimate data set\n");
+    // //if(n_mod_est)
+    // di_mod_est.n = n_mod_est;
+    // di_mod_est.p = p_mod;
+    // di_mod_est.x = &x_mod_est[0];
+    // di_mod_est.y = 0; //there are no y's!
+    // di_mod_est.w = w;
 
     //  }
     //--------------------------------------------------
@@ -643,17 +643,17 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     // double* ftemp  = new double[n]; //fit of current tree
 
     NumericVector sigma_post(nd);
-    NumericVector msd_post(nd);
-    NumericVector bsd_post(nd);
-    NumericMatrix m_post(nd, n);
+    // NumericVector msd_post(nd);
+    // NumericVector bsd_post(nd);
+    // NumericMatrix m_post(nd, n);
     NumericMatrix yhat_post(nd, n);
     NumericMatrix b_post(nd, n);
-    NumericMatrix b_est_post(nd, n_mod_est);
-    arma::mat gamma_post(nd, gamma.n_elem);
-    arma::mat random_var_post(nd, random_var.n_elem);
-    NumericVector b0_vec(nd);
-    NumericVector b1_vec(nd);
-    NumericVector m_vec(nd);
+    // NumericMatrix b_est_post(nd, n_mod_est);
+    // arma::mat gamma_post(nd, gamma.n_elem);
+    // arma::mat random_var_post(nd, random_var.n_elem);
+    // NumericVector b0_vec(nd);
+    // NumericVector b1_vec(nd);
+    // NumericVector m_vec(nd);
     //  NumericMatrix spred2(nd,dip.n);
 
     /*
@@ -1374,20 +1374,20 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         if (((iIter >= burn) & (iIter % thin == 0)))
         {
 
-            msd_post(save_ctr) = fabs(mscale) * con_sd;
-            bsd_post(save_ctr) = fabs(bscale1 - bscale0) * mod_sd;
+            // msd_post(save_ctr) = fabs(mscale) * con_sd;
+            // bsd_post(save_ctr) = fabs(bscale1 - bscale0) * mod_sd;
 
-            m_vec(save_ctr) = mscale;
-            b0_vec(save_ctr) = bscale0;
-            b1_vec(save_ctr) = bscale1;
+            // m_vec(save_ctr) = mscale;
+            // b0_vec(save_ctr) = bscale0;
+            // b1_vec(save_ctr) = bscale1;
 
-            gamma_post.row(save_ctr) = (diagmat(random_var_ix * eta) * gamma).t();
-            random_var_post.row(save_ctr) = (sqrt(eta % eta % random_var)).t();
+            // gamma_post.row(save_ctr) = (diagmat(random_var_ix * eta) * gamma).t();
+            // random_var_post.row(save_ctr) = (sqrt(eta % eta % random_var)).t();
 
             sigma_post(save_ctr) = sigma;
             for (size_t k = 0; k < n; k++)
             {
-                m_post(save_ctr, k) = allfit_con[k];
+                // m_post(save_ctr, k) = allfit_con[k];
                 yhat_post(save_ctr, k) = allfit[k];
             }
             for (size_t k = 0; k < n; k++)
@@ -1396,10 +1396,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 b_post(save_ctr, k) = (bscale1 - bscale0) * allfit_mod[k] / bscale;
             }
             //if(di_mod_est.n) {
-            for (size_t k = 0; k < di_mod_est.n; k++)
-            {
-                b_est_post(save_ctr, k) = (bscale1 - bscale0) * fit_i(k, t_mod, xi_mod, di_mod_est);
-            }
+            // for (size_t k = 0; k < di_mod_est.n; k++)
+            // {
+            //     b_est_post(save_ctr, k) = (bscale1 - bscale0) * fit_i(k, t_mod, xi_mod, di_mod_est);
+            // }
             //}
             save_ctr += 1;
         }
@@ -1424,8 +1424,11 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     treef.close();
 
-    return (List::create(_["yhat_post"] = yhat_post, _["b_post"] = b_post, _["b_est_post"] = b_est_post,
-                         _["sigma"] = sigma_post, _["msd"] = msd_post, _["bsd"] = bsd_post,
-                         _["gamma"] = gamma_post, _["random_var_post"] = random_var_post,
-                         _["mscale_vec"] = m_vec, _["bscale0_vec"] = b0_vec, _["bscale1_vec"] = b1_vec));
+    // return (List::create(_["yhat_post"] = yhat_post, _["b_post"] = b_post, _["b_est_post"] = b_est_post,
+    //                      _["sigma"] = sigma_post, _["msd"] = msd_post, _["bsd"] = bsd_post,
+    //                      _["gamma"] = gamma_post, _["random_var_post"] = random_var_post,
+    //                      _["mscale_vec"] = m_vec, _["bscale0_vec"] = b0_vec, _["bscale1_vec"] = b1_vec));
+
+        return (List::create(_["yhat_post"] = yhat_post, _["b_post"] = b_post,
+                         _["sigma"] = sigma_post));
 }

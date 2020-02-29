@@ -239,15 +239,18 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
 
   ###
   if(is.null(x_c)){
+    return_sort_index = TRUE
+
     x_c = matrix(x_control, ncol=ncol(x_control))
     if(include_pi=="both" | include_pi=="control") {
       x_c = cbind(pihat, x_control)
     }
+  }else{
+    return_sort_index = FALSE
   }
 
   if(is.null(x_m)){
     x_m = matrix(x_moderate, ncol=ncol(x_moderate))
-
     if(include_pi=="both" | include_pi=="moderate") {
       x_m = cbind(pihat, x_moderate)
     }
@@ -309,7 +312,7 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
   #                     _["sigma"] = sigma_post, _["msd"] = msd_post, _["bsd"] = bsd_post,
   #                     _["gamma"] = gamma_post, _["random_var_post"] = random_var_post
 
-  m_post = muy + sdy*fitbcf$m_post[,order(perm)]
+  # m_post = muy + sdy*fitbcf$m_post[,order(perm)]
   tau_post = sdy*fitbcf$b_post[,order(perm)]
   #yhat_post = muy + sdy*fitbcf$m_post
   #yhat_post[,z==1] = yhat_post[,z==1] + fitbcf$b_post
@@ -317,19 +320,28 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
   #yhat_post[,z[perm]==1] = yhat_post[,z[perm]==1] + sdy*fitbcf$b_post
   #yhat_post = yhat_post[,order(perm)]
 
-  list(sigma = sdy*fitbcf$sigma,
+
+  if(return_sort_index){
+
+      output = list(sigma = sdy*fitbcf$sigma,
        yhat = muy + sdy*fitbcf$yhat_post[,order(perm)],
 #       mu  = m_post,
        tau = tau_post,
-       mu_scale = fitbcf$msd*sdy,
-       tau_scale = fitbcf$bsd*sdy,
-       perm = perm,
-       mscale_vec = fitbcf$mscale_vec,
-       bscale0_vec = fitbcf$bscale0_vec,
-       bscale1_vec = fitbcf$bscale1_vec,
-       xi_con = cutpoint_list_c, 
-       xi_mod = cutpoint_list_m
+              xi_con = cutpoint_list_c, 
+       xi_mod = cutpoint_list_m,
+       x_c = x_c,
+       x_m = x_m, 
+       lambda = lambda
   )
+  }else{
+  output = list(sigma = sdy*fitbcf$sigma,
+       yhat = muy + sdy*fitbcf$yhat_post[,order(perm)],
+#       mu  = m_post,
+       tau = tau_post
+  )
+  }
+
+  return(output)
 
 }
 
