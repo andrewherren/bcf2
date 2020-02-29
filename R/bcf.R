@@ -319,8 +319,11 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
        mscale_vec = fitbcf$mscale_vec,
        bscale0_vec = fitbcf$bscale0_vec,
        bscale1_vec = fitbcf$bscale1_vec,
-      xi_con = cutpoint_list_c, 
-       xi_mod = cutpoint_list_m
+       xi_con = cutpoint_list_c, 
+       xi_mod = cutpoint_list_m,
+       x_c = x_c,
+       x_m = x_m, 
+       lambda = lambda
   )
 
 }

@@ -43,7 +43,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                              CharacterVector treef_name_,
                              int status_interval = 100,
                              bool RJ = false, bool randeff = false, bool use_mscale = true, bool use_bscale = true, bool b_half_normal = true, bool update_mu_loading_tree = false,
-                             double trt_init = 1.0)
+                             double trt_init = 1.0, bool verbose = false)
 {
 
     // bool randeff = true;
@@ -52,15 +52,16 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //     randeff = false;
     // }
 
-    if (randeff)
-    {
-        Rcout << "Using random effects." << std::endl;
+    if(verbose){
+        if (randeff)
+        {
+            Rcout << "Using random effects." << std::endl;
+        }
+        else
+        {
+            Rcout << "NOT using random effects." << std::endl;
+        }
     }
-    else
-    {
-        Rcout << "NOT using random effects." << std::endl;
-    }
-
     std::string treef_name = as<std::string>(treef_name_);
     std::ofstream treef(treef_name.c_str());
 
@@ -74,27 +75,27 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     Logger logger = Logger();
     char logBuff[100];
 
-    bool log_level = false;
+    // bool log_level = false;
 
-    logger.setLevel(log_level);
-    logger.log("============================================================");
-    logger.log(" Starting up BCF: ");
-    logger.log("============================================================");
-    if (log_level)
-    {
-        logger.getVectorHead(y_, logBuff);
-        Rcout << "y: " << logBuff << "\n";
-        logger.getVectorHead(z_, logBuff);
-        Rcout << "z: " << logBuff << "\n";
-        logger.getVectorHead(w_, logBuff);
-        Rcout << "w: " << logBuff << "\n";
-    }
+    // logger.setLevel(log_level);
+    // logger.log("============================================================");
+    // logger.log(" Starting up BCF: ");
+    // logger.log("============================================================");
+    // if (log_level)
+    // {
+        // logger.getVectorHead(y_, logBuff);
+        // Rcout << "y: " << logBuff << "\n";
+        // logger.getVectorHead(z_, logBuff);
+        // Rcout << "z: " << logBuff << "\n";
+        // logger.getVectorHead(w_, logBuff);
+        // Rcout << "w: " << logBuff << "\n";
+    // }
 
-    logger.log("BCF is Weighted");
+    // logger.log("BCF is Weighted");
 
     // sprintf(logBuff, "Updating Moderate Tree: %d of %d");
     // logger.log(logBuff);
-    logger.log("");
+    // logger.log("");
 
     /*****************************************************************************
   /* Read, format y
@@ -139,7 +140,9 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     }
     size_t p_con = x_con.size() / n;
 
-    Rcout << "Using " << p_con << " control variables." << std::endl;
+    if(verbose){
+        Rcout << "Using " << p_con << " control variables." << std::endl;
+    }
 
     //x cutpoints
     xinfo xi_con;
@@ -172,8 +175,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     }
     size_t p_mod = x_mod.size() / n;
 
-    Rcout << "Using " << p_mod << " potential effect moderators." << std::endl;
-
+    if(verbose){    
+        Rcout << "Using " << p_mod << " potential effect moderators." << std::endl;
+    }
+    
     //x cutpoints
     xinfo xi_mod;
 
@@ -664,7 +669,9 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
    * note: the allfit objects are all carrying the appropriate scales
    */
     //*****************************************************************************
-    Rcout << "\n============================================================\nBeginning MCMC:\n============================================================\n";
+    if(verbose){
+        Rcout << "\n============================================================\nBeginning MCMC:\n============================================================\n";
+    }
     time_t tp;
     int time1 = time(&tp);
 
@@ -676,7 +683,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     double *weight = new double[n];
     double *weight_het = new double[n];
 
-    logger.setLevel(0);
+    // logger.setLevel(0);
 
     if (update_mu_loading_tree)
     {
@@ -749,7 +756,6 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             }
         }
     }else{
-        cout << "Keep read in leaf parameters fixed" << endl;
     }
 
     // cout << "print con trees, after updating leaf parameters" << endl;
@@ -764,46 +770,46 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         // verbose_itr = iIter>=burn;
         verbose_itr = false;
 
-        if (iIter % status_interval == 0)
+        if ((iIter % status_interval == 0) && verbose)
         {
             Rcout << "iteration: " << iIter << " sigma: " << sigma << endl;
         }
 
-        logger.setLevel(verbose_itr);
+        // logger.setLevel(verbose_itr);
 
-        logger.log("==============================================");
-        sprintf(logBuff, "MCMC iteration: %d of %d, sigma %f", iIter + 1, nd * thin + burn, sigma);
-        logger.log(logBuff);
-        logger.log("==============================================");
-        if (verbose_itr)
-        {
-            logger.getVectorHead(y, logBuff);
-            Rcout << "           y: " << logBuff << "\n";
+        // logger.log("==============================================");
+        // sprintf(logBuff, "MCMC iteration: %d of %d, sigma %f", iIter + 1, nd * thin + burn, sigma);
+        // logger.log(logBuff);
+        // logger.log("==============================================");
+        // if (verbose_itr)
+        // {
+            // logger.getVectorHead(y, logBuff);
+            // Rcout << "           y: " << logBuff << "\n";
 
-            logger.getVectorHead(allfit, logBuff);
-            Rcout << "Current Fit : " << logBuff << "\n";
-        }
+            // logger.getVectorHead(allfit, logBuff);
+            // Rcout << "Current Fit : " << logBuff << "\n";
+        // }
 
-        logger.log("=====================================");
-        logger.log("- Tree Processing");
-        logger.log("=====================================");
+        // logger.log("=====================================");
+        // logger.log("- Tree Processing");
+        // logger.log("=====================================");
 
         //draw trees for m(x)
         for (size_t iTreeCon = 0; iTreeCon < ntree_con; iTreeCon++)
         {
 
-            logger.log("==================================");
-            sprintf(logBuff, "Updating Control Tree: %d of %d", iTreeCon + 1, ntree_con);
-            logger.log(logBuff);
-            logger.log("==================================");
-            logger.startContext();
+            // logger.log("==================================");
+            // sprintf(logBuff, "Updating Control Tree: %d of %d", iTreeCon + 1, ntree_con);
+            // logger.log(logBuff);
+            // logger.log("==================================");
+            // logger.startContext();
 
-            logger.log("Attempting to Print Tree Pre Update \n");
-            if (verbose_itr)
-            {
-                t_con[iTreeCon].pr(xi_con);
-                Rcout << "\n\n";
-            }
+            // logger.log("Attempting to Print Tree Pre Update \n");
+            // if (verbose_itr)
+            // {
+            //     t_con[iTreeCon].pr(xi_con);
+            //     Rcout << "\n\n";
+            // }
 
             // This seems to populate fTemp with the appopriate
             // mu_i for every observation in di_con
@@ -819,12 +825,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                                  //   }
                                  // }
 
-            logger.log("Attempting to Print Tree Post first call to fit \n");
-            if (verbose_itr)
-            {
-                t_con[iTreeCon].pr(xi_con);
-                Rcout << "\n\n";
-            }
+            // logger.log("Attempting to Print Tree Post first call to fit \n");
+            // if (verbose_itr)
+            // {
+            //     t_con[iTreeCon].pr(xi_con);
+            //     Rcout << "\n\n";
+            // }
             // I'd expect a residual calculation somewhere here.
             // so that's what this probably is?
             for (size_t k = 0; k < n; k++)
@@ -860,16 +866,16 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             {
                 weight[k] = w[k] * mscale * mscale / (sigma * sigma); // for non-het case, weights need to be divided by sigma square to make it similar to phi
             }
-            if (verbose_itr)
-            {
-                logger.getVectorHead(weight, logBuff);
-                Rcout << "\n weight: " << logBuff << "\n\n";
-            }
+            // if (verbose_itr)
+            // {
+                // logger.getVectorHead(weight, logBuff);
+                // Rcout << "\n weight: " << logBuff << "\n\n";
+            // }
             // It seems like with 100% probability, either a
             // birth or death will be attempted
             // but the change can still be rejected or accepted
-            logger.log("Starting Birth / Death Processing");
-            logger.startContext();
+            // logger.log("Starting Birth / Death Processing");
+            // logger.startContext();
             bd(t_con[iTreeCon], // tree& x
                xi_con,          // xinfo& xi
                di_con,          // dinfo& di
@@ -877,40 +883,40 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                pi_con,          // pinfo& pi
                gen,
                logger); // RNG& gen
-            logger.stopContext();
+            // logger.stopContext();
 
-            logger.log("Attempting to Print Tree Post db \n");
-            if (verbose_itr)
-            {
-                t_con[iTreeCon].pr(xi_con);
-                Rcout << "\n";
-            }
+            // logger.log("Attempting to Print Tree Post db \n");
+            // if (verbose_itr)
+            // {
+                // t_con[iTreeCon].pr(xi_con);
+                // Rcout << "\n";
+            // }
 
-            if (verbose_itr)
-            {
-                logger.log("Printing Current Status of Fit");
+            // if (verbose_itr)
+            // {
+            //     logger.log("Printing Current Status of Fit");
 
-                logger.getVectorHead(z_, logBuff);
-                // logger.log(logBuff);
-                Rcout << "\n          z : " << logBuff << "\n";
+            //     logger.getVectorHead(z_, logBuff);
+            //     // logger.log(logBuff);
+            //     Rcout << "\n          z : " << logBuff << "\n";
 
-                logger.getVectorHead(y, logBuff);
-                Rcout << "          y : " << logBuff << "\n";
+            //     logger.getVectorHead(y, logBuff);
+            //     Rcout << "          y : " << logBuff << "\n";
 
-                logger.getVectorHead(allfit, logBuff);
-                Rcout << "Fit - Tree  : " << logBuff << "\n";
+            //     logger.getVectorHead(allfit, logBuff);
+            //     Rcout << "Fit - Tree  : " << logBuff << "\n";
 
-                logger.getVectorHead(r_con, logBuff);
-                Rcout << "     r_con  : " << logBuff << "\n\n";
+            //     logger.getVectorHead(r_con, logBuff);
+            //     Rcout << "     r_con  : " << logBuff << "\n\n";
 
-                Rcout << " MScale: " << mscale << "\n";
+            //     Rcout << " MScale: " << mscale << "\n";
 
-                Rcout << " bscale0 : " << bscale0 << "\n";
+            //     Rcout << " bscale0 : " << bscale0 << "\n";
 
-                Rcout << " bscale1 : " << bscale1 << "\n\n";
-            }
-            logger.log("Starting To Draw Mu");
-            logger.startContext();
+            //     Rcout << " bscale1 : " << bscale1 << "\n\n";
+            // }
+            // logger.log("Starting To Draw Mu");
+            // logger.startContext();
 
             drmu(t_con[iTreeCon], // tree& x
                  xi_con,          // xinfo& xi
@@ -919,14 +925,14 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                  weight,
                  gen); // RNG& gen
 
-            logger.stopContext();
+            // logger.stopContext();
 
-            logger.log("Attempting to Print Tree Post drmu \n");
-            if (verbose_itr)
-            {
-                t_con[iTreeCon].pr(xi_con);
-                Rcout << "\n";
-            }
+            // logger.log("Attempting to Print Tree Post drmu \n");
+            // if (verbose_itr)
+            // {
+            //     t_con[iTreeCon].pr(xi_con);
+            //     Rcout << "\n";
+            // }
 
             fit(t_con[iTreeCon],
                 xi_con,
@@ -943,14 +949,14 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 allfit_con[k] += mscale * ftemp[k];
             }
 
-            logger.log("Attempting to Print tree Post second call to fit \n");
+            // logger.log("Attempting to Print tree Post second call to fit \n");
 
             if (verbose_itr)
             {
                 t_con[iTreeCon].pr(xi_con);
                 Rcout << "\n";
             }
-            logger.stopContext();
+            // logger.stopContext();
         }
 
         //draw trees for b(x)
@@ -965,18 +971,18 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
         for (size_t iTreeMod = 0; iTreeMod < ntree_mod; iTreeMod++)
         {
-            logger.log("==================================");
-            sprintf(logBuff, "Updating Moderate Tree: %d of %d", iTreeMod + 1, ntree_mod);
-            logger.log(logBuff);
-            logger.log("==================================");
-            logger.startContext();
+            // logger.log("==================================");
+            // sprintf(logBuff, "Updating Moderate Tree: %d of %d", iTreeMod + 1, ntree_mod);
+            // logger.log(logBuff);
+            // logger.log("==================================");
+            // logger.startContext();
 
-            logger.log("Attempting to Print Tree Pre Update \n");
-            if (verbose_itr)
-            {
-                t_mod[iTreeMod].pr(xi_mod);
-                Rcout << "\n";
-            }
+            // logger.log("Attempting to Print Tree Pre Update \n");
+            // if (verbose_itr)
+            // {
+            //     t_mod[iTreeMod].pr(xi_mod);
+            //     Rcout << "\n";
+            // }
 
             fit(t_mod[iTreeMod],
                 xi_mod,
@@ -987,12 +993,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             //     cout << "ftemp t_mod " << ll << " " << ftemp[ll] << endl;
             //   }
             // }
-            logger.log("Attempting to Print Tree Post first call to fit");
-            if (verbose_itr)
-            {
-                t_mod[iTreeMod].pr(xi_mod);
-                Rcout << "\n";
-            }
+            // logger.log("Attempting to Print Tree Post first call to fit");
+            // if (verbose_itr)
+            // {
+            //     t_mod[iTreeMod].pr(xi_mod);
+            //     Rcout << "\n";
+            // }
 
             for (size_t k = 0; k < n; k++)
             {
@@ -1007,8 +1013,8 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 allfit_mod[k] = allfit_mod[k] - bscale * ftemp[k];
                 r_mod[k] = (y[k] - allfit[k]) / bscale;
             }
-            logger.log("Starting Birth / Death Processing");
-            logger.startContext();
+            // logger.log("Starting Birth / Death Processing");
+            // logger.startContext();
             bd(t_mod[iTreeMod],
                xi_mod,
                di_mod,
@@ -1016,53 +1022,53 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                pi_mod,
                gen,
                logger);
-            logger.stopContext();
+            // logger.stopContext();
 
-            logger.log("Attempting to Print Tree  Post bd \n");
+            // logger.log("Attempting to Print Tree  Post bd \n");
             if (verbose_itr)
             {
                 t_mod[iTreeMod].pr(xi_mod);
                 Rcout << "\n";
             }
 
-            if (verbose_itr)
-            {
-                logger.log("Printing Status of Fit");
+            // if (verbose_itr)
+            // {
+                // logger.log("Printing Status of Fit");
 
-                logger.getVectorHead(z_, logBuff);
-                Rcout << "\n          z : " << logBuff << "\n";
+                // logger.getVectorHead(z_, logBuff);
+                // Rcout << "\n          z : " << logBuff << "\n";
 
-                logger.getVectorHead(y, logBuff);
-                Rcout << "          y : " << logBuff << "\n";
+            //     logger.getVectorHead(y, logBuff);
+            //     Rcout << "          y : " << logBuff << "\n";
 
-                logger.getVectorHead(allfit, logBuff);
-                Rcout << "Fit - Tree  : " << logBuff << "\n";
+            //     logger.getVectorHead(allfit, logBuff);
+            //     Rcout << "Fit - Tree  : " << logBuff << "\n";
 
-                logger.getVectorHead(r_mod, logBuff);
-                Rcout << "     r_mod  : " << logBuff << "\n\n";
+            //     logger.getVectorHead(r_mod, logBuff);
+            //     Rcout << "     r_mod  : " << logBuff << "\n\n";
 
-                Rcout << " MScale: " << mscale << "\n";
+            //     Rcout << " MScale: " << mscale << "\n";
 
-                Rcout << " bscale0 : " << bscale0 << "\n";
+            //     Rcout << " bscale0 : " << bscale0 << "\n";
 
-                Rcout << " bscale1 : " << bscale1 << "\n\n";
-            }
-            logger.log("Starting To Draw Mu");
-            logger.startContext();
+            //     Rcout << " bscale1 : " << bscale1 << "\n\n";
+            // }
+            // logger.log("Starting To Draw Mu");
+            // logger.startContext();
             drmu(t_mod[iTreeMod],
                  xi_mod,
                  di_mod,
                  pi_mod,
                  weight_het,
                  gen);
-            logger.stopContext();
+            // logger.stopContext();
 
-            logger.log("Attempting to Print Tree Post drmuhet \n");
-            if (verbose_itr)
-            {
-                t_mod[iTreeMod].pr(xi_mod);
-                Rcout << "\n";
-            }
+            // logger.log("Attempting to Print Tree Post drmuhet \n");
+            // if (verbose_itr)
+            // {
+            //     t_mod[iTreeMod].pr(xi_mod);
+            //     Rcout << "\n";
+            // }
 
             fit(t_mod[iTreeMod],
                 xi_mod,
@@ -1080,7 +1086,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 allfit_mod[k] += bscale0 * ftemp[k];
             }
 
-            logger.log("Attempting to Print Tree Post second call to fit");
+            // logger.log("Attempting to Print Tree Post second call to fit");
 
             if (verbose_itr)
             {
@@ -1090,9 +1096,9 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             logger.stopContext();
 
         } // end tree lop
-        logger.log("=====================================");
-        logger.log("- MCMC iteration Cleanup");
-        logger.log("=====================================");
+        // logger.log("=====================================");
+        // logger.log("- MCMC iteration Cleanup");
+        // logger.log("=====================================");
 
         if (use_bscale)
         {
@@ -1130,32 +1136,32 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                     rw0 += r / w;
                 }
             }
-            logger.log("Drawing bscale 1");
-            logger.startContext();
+            // logger.log("Drawing bscale 1");
+            // logger.startContext();
             double bscale1_old = bscale1;
             double bscale_fc_var = 1 / (ww1 + bscale_prec);
             bscale1 = bscale_fc_var * rw1 + gen.normal(0., 1.) * sqrt(bscale_fc_var);
-            if (verbose_itr)
-            {
+            // if (verbose_itr)
+            // {
 
-                Rcout << "Original bscale1 : " << bscale1_old << "\n";
-                Rcout << "bscale_prec : " << bscale_prec << ", ww1 : " << ww1 << ", rw1 : " << rw1 << "\n";
-                Rcout << "New  bscale1 : " << bscale1 << "\n\n";
-            }
-            logger.stopContext();
+            //     Rcout << "Original bscale1 : " << bscale1_old << "\n";
+            //     Rcout << "bscale_prec : " << bscale_prec << ", ww1 : " << ww1 << ", rw1 : " << rw1 << "\n";
+            //     Rcout << "New  bscale1 : " << bscale1 << "\n\n";
+            // }
+            // logger.stopContext();
 
-            logger.log("Drawing bscale 0");
-            logger.startContext();
+            // logger.log("Drawing bscale 0");
+            // logger.startContext();
             double bscale0_old = bscale0;
             bscale_fc_var = 1 / (ww0 + bscale_prec);
             bscale0 = bscale_fc_var * rw0 + gen.normal(0., 1.) * sqrt(bscale_fc_var);
-            if (verbose_itr)
-            {
-                Rcout << "Original bscale0 : " << bscale0_old << "\n";
-                Rcout << "bscale_prec : " << bscale_prec << ", ww0 : " << ww0 << ", rw0 : " << rw0 << "\n";
-                Rcout << "New  bscale0 : " << bscale0 << "\n\n";
-            }
-            logger.stopContext();
+            // if (verbose_itr)
+            // {
+            //     Rcout << "Original bscale0 : " << bscale0_old << "\n";
+            //     Rcout << "bscale_prec : " << bscale_prec << ", ww0 : " << ww0 << ", rw0 : " << rw0 << "\n";
+            //     Rcout << "New  bscale0 : " << bscale0 << "\n\n";
+            // }
+            // logger.stopContext();
 
             for (size_t k = 0; k < ntrt; ++k)
             {
@@ -1169,7 +1175,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             // update delta_mod
             if (b_half_normal)
             {
-                logger.log("Updating delta_mod because b_half_normal");
+                // logger.log("Updating delta_mod because b_half_normal");
                 double ssq = 0.0;
                 tree::npv bnv;
                 typedef tree::npv::size_type bvsz;
@@ -1189,12 +1195,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 }
                 delta_mod = gen.gamma(0.5 * (1. + endnode_count), 1.0) / (0.5 * (1 + ssq));
             }
-            if (verbose_itr)
-            {
-                Rcout << "Original pi_mod.tau : " << pi_mod.tau << "\n";
-                pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod));
-                Rcout << "New pi_mod.tau : " << pi_mod.tau << "\n\n";
-            }
+            // if (verbose_itr)
+            // {
+            //     Rcout << "Original pi_mod.tau : " << pi_mod.tau << "\n";
+            //     pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod));
+            //     Rcout << "New pi_mod.tau : " << pi_mod.tau << "\n\n";
+            // }
         }
         else
         {
@@ -1229,17 +1235,17 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                 rw += r / w;
             }
 
-            logger.log("Drawing mscale");
+            // logger.log("Drawing mscale");
 
             double mscale_old = mscale;
             double mscale_fc_var = 1 / (ww + mscale_prec);
             mscale = mscale_fc_var * rw + gen.normal(0., 1.) * sqrt(mscale_fc_var);
-            if (verbose_itr)
-            {
-                Rcout << "Original mscale : " << mscale_old << "\n";
-                Rcout << "mscale_prec : " << mscale_prec << ", ww : " << ww << ", rw : " << rw << "\n";
-                Rcout << "New  mscale : " << mscale << "\n\n";
-            }
+            // if (verbose_itr)
+            // {
+            //     Rcout << "Original mscale : " << mscale_old << "\n";
+            //     Rcout << "mscale_prec : " << mscale_prec << ", ww : " << ww << ", rw : " << rw << "\n";
+            //     Rcout << "New  mscale : " << mscale << "\n\n";
+            // }
 
             //Rcout<< mscale_fc_var << " " << rw <<" " << mscale << endl;
 
@@ -1269,13 +1275,13 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             }
 
             delta_con = gen.gamma(0.5 * (1. + endnode_count), 1.0) / (0.5 * (1 + ssq));
-            if (verbose_itr)
-            {
-                logger.log("Updating pi_con.tau");
-                Rcout << "Original pi_con.tau : " << pi_con.tau << "\n";
-                pi_con.tau = con_sd / (sqrt(delta_con) * sqrt((double)ntree_con));
-                Rcout << "New pi_con.tau : " << pi_con.tau << "\n\n";
-            }
+            // if (verbose_itr)
+            // {
+            //     logger.log("Updating pi_con.tau");
+            //     Rcout << "Original pi_con.tau : " << pi_con.tau << "\n";
+            //     pi_con.tau = con_sd / (sqrt(delta_con) * sqrt((double)ntree_con));
+            //     Rcout << "New pi_con.tau : " << pi_con.tau << "\n\n";
+            // }
         }
         else
         {
@@ -1286,7 +1292,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
         //sync allfits after scale updates, if necessary. Could do smarter backfitting updates inline
         if (use_mscale || use_bscale)
         {
-            logger.log("Sync allfits after scale updates");
+            // logger.log("Sync allfits after scale updates");
 
             for (size_t k = 0; k < n; ++k)
             {
@@ -1352,7 +1358,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
             }
         }
 
-        logger.log("Draw Sigma");
+        // logger.log("Draw Sigma");
         //draw sigma
         double rss = 0.0;
         double restemp = 0.0;
@@ -1400,9 +1406,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     } // end MCMC Loop
 
     int time2 = time(&tp);
-    Rcout << "\n============================================================\n MCMC Complete \n============================================================\n";
 
+    if(verbose){
+        Rcout << "\n============================================================\n MCMC Complete \n============================================================\n";
+    
     Rcout << "time for loop: " << time2 - time1 << endl;
+    }
 
     t_mod.clear();
     t_con.clear();

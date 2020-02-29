@@ -26,7 +26,7 @@ bool bd(tree& x, xinfo& xi, dinfo& di, double* phi, pinfo& pi, RNG& gen, Logger 
    double PBx = getpb(x,xi,pi,goodbots); //prob of a birth at x
 
    if(gen.uniform() < PBx) { //if do birth
-      logger.log("Attempting Birth");
+      // logger.log("Attempting Birth");
       //--------------------------------------------------
       //draw proposal
 
@@ -137,7 +137,7 @@ bool bd(tree& x, xinfo& xi, dinfo& di, double* phi, pinfo& pi, RNG& gen, Logger 
       
       //all wrong but whatever, they get resampled immediately
       if(gen.uniform() < alpha) { //if accept birth
-         logger.log("Accepting Birth");
+         // logger.log("Accepting Birth");
          //draw mul, mean for left node
          a= 1.0/(pi.tau*pi.tau); //a = 1/tau^2
          s2 = pi.sigma*pi.sigma; // sigma^2
@@ -155,11 +155,11 @@ bool bd(tree& x, xinfo& xi, dinfo& di, double* phi, pinfo& pi, RNG& gen, Logger 
 			x.birth(nx->nid(),v,c,mul,mur);
          return true;
       } else {
-         logger.log("Rejecting Birth");
+         // logger.log("Rejecting Birth");
          return false;
       }
    } else { // if not do birth, do death
-      logger.log("Attempting Death");
+      // logger.log("Attempting Death");
       //--------------------------------------------------
       //draw proposal
 
@@ -244,7 +244,7 @@ bool bd(tree& x, xinfo& xi, dinfo& di, double* phi, pinfo& pi, RNG& gen, Logger 
       
       //all wrong, but updated immediately so whatever //@peter @charlie I wonder what this means
       if(gen.uniform()<alpha) { // if acccept death
-         logger.log("Acccepting Death");
+         // logger.log("Acccepting Death");
          //draw mu for nog (which will be bot)
          n = sl.n + sr.n;
          a= 1.0/(pi.tau*pi.tau); //a = 1/tau^2
@@ -263,7 +263,7 @@ bool bd(tree& x, xinfo& xi, dinfo& di, double* phi, pinfo& pi, RNG& gen, Logger 
 #endif
          return true;
       } else { // if reject death
-         logger.log("Rejecting Death");
+         // logger.log("Rejecting Death");
 
 #ifdef MPIBART
 			//cout << "Master sending no birth/deaths" << endl;

@@ -182,69 +182,84 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                 base_moderate = 0.25,
                 power_moderate = 3,
                 nu = 3, lambda = NULL, sigq = .9, sighat = NULL, randeff = FALSE, 
-                include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE, ini_bcf = FALSE, update_mu_loading_tree = FALSE
+                include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE, ini_bcf = FALSE, update_mu_loading_tree = FALSE,
+                verbose = FALSE, x_c = NULL, x_m = NULL, cutpoint_list_c = NULL, cutpoint_list_m = NULL
 ) {
-  print("ini bcf" )
-  print(ini_bcf)
+  if(verbose){
+    print("ini bcf" )
+    print(ini_bcf)
+  }
   if(is.null(w)){
     w <- matrix(1, ncol = 1, nrow = length(y))
     }
 
   pihat = as.matrix(pihat)
-  if(!.ident(length(y),
-             length(z),
-             length(w),
-             nrow(x_control),
-             nrow(x_moderate),
-             nrow(pihat))
-    ) {
-    stop("Data size mismatch. The following should all be equal:
-         length(y): ", length(y), "\n",
-         "length(z): ", length(z), "\n",
-         "length(w): ", length(w), "\n",
-         "nrow(x_control): ", nrow(x_control), "\n",
-         "nrow(x_moderate): ", nrow(x_moderate), "\n",
-         "nrow(pihat): ", nrow(pihat),"\n"
-    )
-  }
+  # if(!.ident(length(y),
+  #            length(z),
+  #            length(w),
+  #            nrow(x_control),
+  #            nrow(x_moderate),
+  #            nrow(pihat))
+  #   ) {
+  #   stop("Data size mismatch. The following should all be equal:
+  #        length(y): ", length(y), "\n",
+  #        "length(z): ", length(z), "\n",
+  #        "length(w): ", length(w), "\n",
+  #        "nrow(x_control): ", nrow(x_control), "\n",
+  #        "nrow(x_moderate): ", nrow(x_moderate), "\n",
+  #        "nrow(pihat): ", nrow(pihat),"\n"
+  #   )
+  # }
 
-  if(any(is.na(y))) stop("Missing values in y")
-  if(any(is.na(z))) stop("Missing values in z")
-  if(any(is.na(w))) stop("Missing values in w")
-  if(any(is.na(x_control))) stop("Missing values in x_control")
-  if(any(is.na(x_moderate))) stop("Missing values in x_moderate")
-  if(any(is.na(pihat))) stop("Missing values in pihat")
+  # if(any(is.na(y))) stop("Missing values in y")
+  # if(any(is.na(z))) stop("Missing values in z")
+  # if(any(is.na(w))) stop("Missing values in w")
+  # if(any(is.na(x_control))) stop("Missing values in x_control")
+  # if(any(is.na(x_moderate))) stop("Missing values in x_moderate")
+  # if(any(is.na(pihat))) stop("Missing values in pihat")
 
-  if(any(!is.finite(y))) stop("Non-numeric values in y")
-  if(any(!is.finite(z))) stop("Non-numeric values in z")
-  if(any(!is.finite(w))) stop("Non-numeric values in w")
-  if(any(!is.finite(x_control))) stop("Non-numeric values in x_control")
-  if(any(!is.finite(x_moderate))) stop("Non-numeric values in x_moderate")
-  if(any(!is.finite(pihat))) stop("Non-numeric values in pihat")
+  # if(any(!is.finite(y))) stop("Non-numeric values in y")
+  # if(any(!is.finite(z))) stop("Non-numeric values in z")
+  # if(any(!is.finite(w))) stop("Non-numeric values in w")
+  # if(any(!is.finite(x_control))) stop("Non-numeric values in x_control")
+  # if(any(!is.finite(x_moderate))) stop("Non-numeric values in x_moderate")
+  # if(any(!is.finite(pihat))) stop("Non-numeric values in pihat")
 
-  if(!all(sort(unique(z)) == c(0,1))) stop("z must be a vector of 0's and 1's, with at least one of each")
+  # if(!all(sort(unique(z)) == c(0,1))) stop("z must be a vector of 0's and 1's, with at least one of each")
 
-  if(length(unique(y))<5) warning("y appears to be discrete")
+  # if(length(unique(y))<5) warning("y appears to be discrete")
 
-  if(nburn<0) stop("nburn must be positive")
-  if(nsim<0) stop("nsim must be positive")
-  if(nthin<0) stop("nthin must be positive")
-  if(nthin>nsim+1) stop("nthin must be < nsim")
-  if(nburn<100) warning("A low (<100) value for nburn was supplied")
+  # if(nburn<0) stop("nburn must be positive")
+  # if(nsim<0) stop("nsim must be positive")
+  # if(nthin<0) stop("nthin must be positive")
+  # if(nthin>nsim+1) stop("nthin must be < nsim")
+  # if(nburn<100) warning("A low (<100) value for nburn was supplied")
 
   ### TODO range check on parameters
 
   ###
-  x_c = matrix(x_control, ncol=ncol(x_control))
-  x_m = matrix(x_moderate, ncol=ncol(x_moderate))
-  if(include_pi=="both" | include_pi=="control") {
-    x_c = cbind(pihat, x_control)
+  if(is.null(x_c)){
+    x_c = matrix(x_control, ncol=ncol(x_control))
+    if(include_pi=="both" | include_pi=="control") {
+      x_c = cbind(pihat, x_control)
+    }
   }
-  if(include_pi=="both" | include_pi=="moderate") {
-    x_m = cbind(pihat, x_moderate)
+
+  if(is.null(x_m)){
+    x_m = matrix(x_moderate, ncol=ncol(x_moderate))
+
+    if(include_pi=="both" | include_pi=="moderate") {
+      x_m = cbind(pihat, x_moderate)
+    }
   }
-  cutpoint_list_c = lapply(1:ncol(x_c), function(i) .cp_quantile(x_c[,i]))
-  cutpoint_list_m = lapply(1:ncol(x_m), function(i) .cp_quantile(x_m[,i]))
+
+  if(is.null(cutpoint_list_c)){
+    cutpoint_list_c = lapply(1:ncol(x_c), function(i) .cp_quantile(x_c[,i]))
+  }
+
+  if(is.null(cutpoint_list_m)){
+    cutpoint_list_m = lapply(1:ncol(x_m), function(i) .cp_quantile(x_m[,i]))
+  }
 
   yscale = scale(y)
   sdy = sd(y)
@@ -263,7 +278,9 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
 
   perm = order(z, decreasing=TRUE)
 
-  cat("Calling bcfoverparRcppClean From R\n")
+  if(verbose){
+    cat("Calling bcfoverparRcppClean From R\n")
+  }
   fitbcf = bcfoverparRcppClean_ini(ini_bcf, treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
                         pi_mod_tau, pi_mod_sigma, mod_tree_scaling,
                         yscale[perm], z[perm], w[perm],
@@ -279,9 +296,10 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                         mod_sd = ifelse(abs(sdy - sd_moderate)<1e-6, 1, sd_moderate/sdy)/ifelse(use_tauscale,0.674,1), # if HN make sd_moderate the prior median
                         base_moderate, power_moderate, base_control, power_control,
                         "tmp", status_interval = update_interval, randeff = randeff, 
-                        use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE, update_mu_loading_tree = update_mu_loading_tree, trt_init = 1.0)
-  cat(" bcfoverparRcppClean returned to R\n")
-
+                        use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE, update_mu_loading_tree = update_mu_loading_tree, trt_init = 1.0, verbose = verbose)
+  if(verbose){
+    cat(" bcfoverparRcppClean returned to R\n")
+  }
 
   #B = drop(fit$post_B)
   #B0 = fit$b0
