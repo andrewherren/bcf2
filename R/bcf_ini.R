@@ -91,7 +91,7 @@
 #' # data generating process
 #' p = 3 #two control variables and one moderator
 #' n = 250
-#' 
+#'
 #' set.seed(1)
 #'
 #' x = matrix(rnorm(n*p), nrow=n)
@@ -170,7 +170,7 @@
 #' @importFrom stats approxfun lm qchisq quantile sd
 #' @export
 bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bscale1_ini, sigma_ini, pi_con_tau, pi_con_sigma,
-                pi_mod_tau, pi_mod_sigma, mod_tree_scaling, 
+                pi_mod_tau, pi_mod_sigma, mod_tree_scaling,
                 y, z, x_control, x_moderate=x_control, pihat, w = NULL,
                 nburn, nsim, nthin = 1, update_interval = 100,
                 ntree_control = 200,
@@ -181,7 +181,7 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                 sd_moderate = sd(y),
                 base_moderate = 0.25,
                 power_moderate = 3,
-                nu = 3, lambda = NULL, sigq = .9, sighat = NULL, randeff = FALSE, 
+                nu = 3, lambda = NULL, sigq = .9, sighat = NULL, randeff = FALSE,
                 include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE, ini_bcf = FALSE, update_mu_loading_tree = FALSE,
                 verbose = FALSE, x_c = NULL, x_m = NULL, cutpoint_list_c = NULL, cutpoint_list_m = NULL
 ) {
@@ -297,8 +297,8 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
                         ntree_moderate, ntree_control, lambda, nu,
                         con_sd = ifelse(abs(2*sdy - sd_control)<1e-6, 2, sd_control/sdy),
                         mod_sd = ifelse(abs(sdy - sd_moderate)<1e-6, 1, sd_moderate/sdy)/ifelse(use_tauscale,0.674,1), # if HN make sd_moderate the prior median
-                        base_moderate, power_moderate, base_control, power_control,
-                        "tmp", status_interval = update_interval, randeff = randeff, 
+                        base_control, power_control, base_moderate, power_moderate,
+                        "tmp", status_interval = update_interval, randeff = randeff,
                         use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE, update_mu_loading_tree = update_mu_loading_tree, trt_init = 1.0, verbose = verbose)
   if(verbose){
     cat(" bcfoverparRcppClean returned to R\n")
@@ -327,10 +327,10 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
        yhat = muy + sdy*fitbcf$yhat_post[,order(perm)],
 #       mu  = m_post,
        tau = tau_post,
-              xi_con = cutpoint_list_c, 
+              xi_con = cutpoint_list_c,
        xi_mod = cutpoint_list_m,
        x_c = x_c,
-       x_m = x_m, 
+       x_m = x_m,
        lambda = lambda
   )
   }else{

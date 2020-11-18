@@ -91,7 +91,7 @@
 #' # data generating process
 #' p = 3 #two control variables and one moderator
 #' n = 250
-#' 
+#'
 #' set.seed(1)
 #'
 #' x = matrix(rnorm(n*p), nrow=n)
@@ -182,7 +182,7 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
                 nu = 3, lambda = NULL, sigq = .9, sighat = NULL, randeff = FALSE,
                 include_pi = "control", use_muscale=TRUE, use_tauscale=TRUE
 ) {
-  
+
   if(is.null(w)){
     w <- matrix(1, ncol = 1, nrow = length(y))
     }
@@ -278,7 +278,7 @@ bcf <- function(y, z, x_control, x_moderate=x_control, pihat, w = NULL,
                         ntree_moderate, ntree_control, lambda, nu,
                         con_sd = ifelse(abs(2*sdy - sd_control)<1e-6, 2, sd_control/sdy),
                         mod_sd = ifelse(abs(sdy - sd_moderate)<1e-6, 1, sd_moderate/sdy)/ifelse(use_tauscale,0.674,1), # if HN make sd_moderate the prior median
-                        base_moderate, power_moderate, base_control, power_control,
+                        base_control, power_control, base_moderate, power_moderate,
                         "tmp", status_interval = update_interval, randeff = randeff,
                         use_mscale = use_muscale, use_bscale = use_tauscale, b_half_normal = TRUE)
   cat(" bcfoverparRcppClean returned to R\n")
