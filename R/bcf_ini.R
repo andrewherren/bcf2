@@ -264,9 +264,9 @@ bcf_ini <- function(treedraws_con, treedraws_mod, muscale_ini, bscale0_ini, bsca
     cutpoint_list_m = lapply(1:ncol(x_m), function(i) .cp_quantile(x_m[,i]))
   }
 
-  yscale = scale(y)
-  sdy = sd(y)
-  muy = mean(y)
+  sdy = sqrt(Hmisc::wtd.var(y, w))
+  muy = stats::weighted.mean(y, w)
+  yscale = (y-muy)/sdy
 
   if(is.null(lambda)) {
     if(is.null(sighat)) {
