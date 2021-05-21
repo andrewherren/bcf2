@@ -118,7 +118,7 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
     double ybar = allys.sy / n;                                  //sample mean
     double shat = sqrt((allys.sy2 - n * ybar * ybar) / (n - 1)); //sample standard deviation
     /*****************************************************************************
-  /* Read, format  weights 
+  /* Read, format  weights
   *****************************************************************************/
     double *w = new double[n]; //y-(allfit-ftemp) = y-allfit+ftemp
 
@@ -223,7 +223,7 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
     pi_mod.alpha = mod_alpha;                                          //prior prob a bot node splits is alpha/(1+d)^beta, d is depth of node
     pi_mod.beta = mod_beta;                                            //2 for bart means it is harder to build big trees.
-    pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //sigma_mu, variance on leaf parameters
+    pi_mod.tau = mod_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //sigma_mu, variance on leaf parameters
     pi_mod.sigma = shat;                                               //resid variance is \sigma^2_y/bscale^2 in the backfitting update
 
     pinfo pi_con;
@@ -829,8 +829,10 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
             if (verbose_itr)
             {
                 Rcout << "Original pi_mod.tau : " << pi_mod.tau << "\n";
-                pi_mod.tau = con_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod));
+                pi_mod.tau = mod_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod));
                 Rcout << "New pi_mod.tau : " << pi_mod.tau << "\n\n";
+            } else {
+                pi_mod.tau = mod_sd / (sqrt(delta_mod) * sqrt((double)ntree_mod)); //change to mod_sd
             }
         }
         else
@@ -912,6 +914,8 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
                 Rcout << "Original pi_con.tau : " << pi_con.tau << "\n";
                 pi_con.tau = con_sd / (sqrt(delta_con) * sqrt((double)ntree_con));
                 Rcout << "New pi_con.tau : " << pi_con.tau << "\n\n";
+            } else {
+                pi_con.tau = con_sd / (sqrt(delta_con) * sqrt((double)ntree_con));
             }
         }
         else
@@ -1048,7 +1052,7 @@ List bcfoverparRcppClean(NumericVector y_, NumericVector z_, NumericVector w_,
 
     Rcpp::StringVector output_tree_mod(1);
     Rcpp::StringVector output_tree_con(1);
-    
+
     // for(size_t i = 0; i < num_sweeps; i ++ ){
     treess_mod.precision(10);
     treess_con.precision(10);

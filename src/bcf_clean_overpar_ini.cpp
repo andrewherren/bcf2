@@ -120,7 +120,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     double ybar = allys.sy / n;                                  //sample mean
     double shat = sqrt((allys.sy2 - n * ybar * ybar) / (n - 1)); //sample standard deviation
     /*****************************************************************************
-  /* Read, format  weights 
+  /* Read, format  weights
   *****************************************************************************/
     double *w = new double[n]; //y-(allfit-ftemp) = y-allfit+ftemp
 
@@ -175,10 +175,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     }
     size_t p_mod = x_mod.size() / n;
 
-    if(verbose){    
+    if(verbose){
         Rcout << "Using " << p_mod << " potential effect moderators." << std::endl;
     }
-    
+
     //x cutpoints
     xinfo xi_mod;
 
@@ -1409,7 +1409,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     if(verbose){
         Rcout << "\n============================================================\n MCMC Complete \n============================================================\n";
-    
+
     Rcout << "time for loop: " << time2 - time1 << endl;
     }
 
