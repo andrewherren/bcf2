@@ -52,6 +52,10 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
     //     randeff = false;
     // }
 
+    // For very small cutpoints that get truncated when serialized 
+    // to string from XBCF for BCF warmstart
+    double EPS = 1e-07;
+    
     if(verbose){
         if (randeff)
         {
@@ -245,7 +249,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                     else
                     {
                         index_in_full = 0;
-                        while (xi_con[temp_node[kk]->getv()][index_in_full] < temp_node[kk]->getc_value() && index_in_full <= xi_con[temp_node[kk]->getv()].size())
+                        while (xi_con[temp_node[kk]->getv()][index_in_full] < temp_node[kk]->getc_value() + EPS && index_in_full <= xi_con[temp_node[kk]->getv()].size())
                         {
                             index_in_full++;
                         }
@@ -304,7 +308,7 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
                     else
                     {
                         index_in_full = 0;
-                        while (xi_mod[temp_node[kk]->getv()][index_in_full] < temp_node[kk]->getc_value() && index_in_full <= xi_mod[temp_node[kk]->getv()].size())
+                        while (xi_mod[temp_node[kk]->getv()][index_in_full] < temp_node[kk]->getc_value() + EPS && index_in_full <= xi_mod[temp_node[kk]->getv()].size())
                         {
                             index_in_full++;
                         }
@@ -633,14 +637,12 @@ List bcfoverparRcppClean_ini(bool ini_bcf, SEXP treedraws_con, SEXP treedraws_mo
 
     //--------------------------------------------------
     //storage for the fits
-    // double* allfit = new double[n]; //yhat
     for (size_t i = 0; i < n; i++)
     {
         allfit[i] = allfit_mod[i] + allfit_con[i];
         if (randeff)
             allfit[i] += allfit_random[i];
     }
-    // double* ftemp  = new double[n]; //fit of current tree
 
     NumericVector sigma_post(nd);
     // NumericVector msd_post(nd);
